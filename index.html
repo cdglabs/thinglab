@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+    body {
+        background: #888;
+        color: #EEE;
+        font-family: Avenir, sans-serif;
+    }
+    a {
+        color: #EEE;
+    }
+    canvas {
+        background: #000;
+        border-radius: 10px;
+        cursor: none;
+    }
+</style>
+<script src="St78/Smalltalk78.js"></script>
+<title>ThingLab</title>
+</head>
+
+<body>
+<a href="http://cdglabs.org/" target="_blank"><img src="cdg-logo.svg" width="75" height="75" align="right"></a>
+
+<h1>ThingLab</h1>
+
+<canvas id="canvas" width="1024" height="768"></canvas>
+
+<p>This is Alan Borning's “ThingLab” running on the <a href="http://lively-web.org/users/bert/Smalltalk-78.html" target="_blank">Smalltalk-78 VM</a> by Bert Freudenberg and Dan Ingalls.</p>
+
+<script>
+module("ThingLab").requires("Smalltalk78").toRun(function() {
+    Smalltalk78.run("thinglab.st78", canvas);
+});
+</script>
+
+</body>
+
+</html>
