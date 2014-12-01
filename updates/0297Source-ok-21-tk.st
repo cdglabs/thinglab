@@ -1,0 +1,1 @@
+Stream understands: 'append: x | i	"Array arg"	[for i from: x do		[self next _ i].	x]' classified: falseStream understands: 'dequeue		"use it as a FIFO"	[self dequeue: 1]' classified: false

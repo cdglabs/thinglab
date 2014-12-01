@@ -1,0 +1,1 @@
+'Prevent error from hidden scrollbar'ScrollBar understands: 'hidewhile block | result 	[[self showing  [		self hide.		result _ block eval.		self show]	result _ block eval].	result]'

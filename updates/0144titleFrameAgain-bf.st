@@ -1,0 +1,1 @@
+'Fix fullTitleFrame for real'Window understands: 'fullTitleFrame | rect	[self style: noTitle  [frame origin rect: frame origin]	rect _ frame origin + (0(titleloc y - 2)) rect: frame maxX(frame minY-4).	[self  user topWindow and nil  titleframe window		 [rect _ rect include: titleframe window]].	rect inset: 22]'

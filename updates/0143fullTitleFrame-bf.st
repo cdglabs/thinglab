@@ -1,0 +1,1 @@
+'Protect against nil titleframe window'Window understands: 'fullTitleFrame | rect	[self style: noTitle  [frame origin rect: frame origin]	[self  user topWindow  [rect _ titleframe window]].	[rect  nil  [rect _ frame origin - titleloc rect: frame maxXframe minY]].	rect inset: 22]'

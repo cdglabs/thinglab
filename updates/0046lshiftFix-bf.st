@@ -1,0 +1,1 @@
+'Fix (124 lshift: 8)'LargeInteger understands: 'logicUnArg | t1 	[bytes length  2  [user notify: ''not logic arg'']	(bytes  2 land: 128)  0 		[t1 _ (bytes  1 lxor: 255) + 1.		bytes  1 _ t1 land: 255.		t1 _ t1 lshift: 8.		bytes  2 _ (bytes  2 lxor: 255) + t1 land: 255.		neg _ true]	self asInteger]' classified: 'As yet unclassified'

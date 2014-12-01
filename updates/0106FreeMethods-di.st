@@ -1,0 +1,1 @@
+'Frees methods in MethodKeeper. Was not working before.'CompiledMethod understands: 'freeKeptMethods | t1 t2  	[MethodKeeper _ (Vector new: 10) asStream]' classified: 'As yet unclassified'MessageDict understands: 'freeMethods | t1 t2  	[(CompiledMethod new: 2) freeKeptMethods]' classified: 'As yet unclassified'MessageDict new freeMethods.

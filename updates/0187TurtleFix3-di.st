@@ -1,0 +1,1 @@
+FormWindow understands: 'frame: f 	[[turtlemodetrue[form _ Form new extent: f extent]].	super frame: f]'

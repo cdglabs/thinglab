@@ -1,0 +1,1 @@
+Textframe understands: 'displayall | y save	["Kludge: globally clip to window. Should fix the drawing instead"	save _ DisplayBLTer window.	DisplayBLTer window: (window intersect: save).	y _ self displaylines: 1 to: lastline.	self clearfrom: y.	DisplayBLTer window: save]'

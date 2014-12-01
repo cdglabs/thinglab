@@ -1,0 +1,1 @@
+Class new title: LibrarySeq	subclassof: Sequencer	fields: ' '	declare: '';	classified: 'Project Sequencing'LibrarySeq understands: 'initSeq[super initSeq.background _ user asset: ''Library-of-Congress.form''. user restore.]'LibrarySeq understands: 'sequence[count = 1  [].count > 1  [].]'LibrarySeq understands: 'resetSeq[super resetInit.]'

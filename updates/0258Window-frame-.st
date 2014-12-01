@@ -1,0 +1,1 @@
+Window understands: 'frame: r | ext	[if nil  frame then [ext _ frame extent].	frame _ self fixframe: r.	if ext  frame extent then [self forgetBits]]' classified: 'as yet unclassified'

@@ -1,0 +1,1 @@
+"Bring in fonts"| list indd.  list _ ('Helvetica11' 'Helvetica13' 'Helvetica14' 'Helvetica18' 'Helvetica25' 'Helvetica36' 'Helvetica48'  ).for indd from: 1 to: list length do [	(HelveticaSet)  (indd-1) _ 		(Font new fromStrike: (listindd) stream: (user fileString: updateURL + (listindd + '.strike')) asStream)].HelveticaStyle fontset: HelveticaSet.
