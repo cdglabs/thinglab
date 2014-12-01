@@ -1,0 +1,1 @@
+"New text style"Smalltalk declare: ST72FontSet as: FontSet new init.Smalltalk declare: ST72FontStyle as: StyleSheet new.

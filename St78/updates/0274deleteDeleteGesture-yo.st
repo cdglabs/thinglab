@@ -1,0 +1,1 @@
+ShapeWindow understands: 'eachtime | name	[for name from: self controlPoints do [		(self pointHotspot: style  name) has: user mp		 [self crossHairCursor showwhile [self pointMove: name]. true]].	[user shiftKey[ false]].	super eachtime]' classified: 'as yet unclassified'

@@ -1,0 +1,1 @@
+Class new title: D1Recognizer	subclassof: Object	fields: ' templates'	declare: '';	classified: 'D1Recognizer'Class new title: D1Stream	subclassof: Object	fields: ' hot cool hotStart hotEnd coolStart coolEnd'	declare: '';	classified: 'D1Recognizer'Class new title: D1Stroke	subclassof: Object	fields: ' name points'	declare: '';	classified: 'D1Recognizer'

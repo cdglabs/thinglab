@@ -1,0 +1,1 @@
+"New text style"Smalltalk declare: HelveticaSet as: FontSet new init.Smalltalk declare: HelveticaStyle as: StyleSheet new.

@@ -1,0 +1,1 @@
+'Patch the Xerox logo - fasten seat belts' | w ed loc . for w from: CodeWindow allInstances do 	[w'panes1' is: CodePane		[ed _ (w'panes1')'pared'.		loc _ ed para findString: 'XEROX' startingAt: 1.		loc > 0  [ed replace: loc to: loc+4 with: ('XEROX' asParagraph allFont: 12)]]]

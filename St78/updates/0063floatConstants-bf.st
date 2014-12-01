@@ -1,0 +1,1 @@
+'Higher-precision float constants'Float understands: 'classInit 	[pi _ 3.141592653589793.	halfpi _ pi / 2.0.	fourthpi _ pi / 4.0.	twopi _ pi * 2.0.	radiansPerDegree _ pi / 180.0.	degreesPerRadian _ 180.0 / pi.	ln2 _ 0.693147180559945.	sqrt2 _ 1.414213562373095]' classified: 'As yet unclassified'Float classInit.

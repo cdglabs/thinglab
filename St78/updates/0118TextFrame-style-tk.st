@@ -1,0 +1,1 @@
+Textframe understands: 'style: newStyle [style _ newStyle]' 	classified: 'as yet unclassified'.

@@ -1,0 +1,1 @@
+"Bring in fonts"| list indd.  list _ ('ST72Font10' ).for indd from: 1 to: list length do [	(ST72FontSet)  (indd-1) _ 		(Font new fromStrike: (listindd) stream: (user fileString: updateURL + (listindd + '.strike')) asStream)].ST72FontStyle fontset: ST72FontSet.

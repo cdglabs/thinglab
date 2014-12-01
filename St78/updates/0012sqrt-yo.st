@@ -1,0 +1,1 @@
+'add float primitiv'Float understands: 'sqrt | t1 t2  	[[self  0.0 		[self = 0.0  [0.0]		user notify: ''sqrt invalid for x<0.'']].	t1 _ self + 0.0.	t1 instfield: 1 _ (t1 instfield: 1) / 4 * 2.	for t2 to: 5 do		[t1 _ self - (t1 * t1) / (t1 * 2.0) + t1].	t1] primitive: 200' classified: 'As yet unclassified'

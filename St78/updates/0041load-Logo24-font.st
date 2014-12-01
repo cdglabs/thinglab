@@ -1,0 +1,1 @@
+"Bring in fonts"| list indd.  list _ ('Logo24' 12).for indd from: 1 to: list length by: 2 do [	(DefaultTextStyle fontset)  (list(indd+1)) _ 		(Font new fromStrike: (listindd) stream: (user fileString: updateURL + (listindd + '.strike')) asStream)].

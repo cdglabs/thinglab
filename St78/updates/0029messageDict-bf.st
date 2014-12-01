@@ -1,0 +1,1 @@
+'set code to nil when deleting method'MessageDict understands: 'delete: selector | index 	[index _ self findorerror: selector.	self freeMethod: methods  index.	methods  index _ nil.	[code  nil  []	code  index _ nil].	super delete: selector]' classified: 'As yet unclassified'

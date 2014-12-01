@@ -1,0 +1,1 @@
+ClassPane understands: 'selected 	[organizationPane class: Smalltalk  (list  selection).	organizationPane select: 3]' classified: 'as yet unclassified'

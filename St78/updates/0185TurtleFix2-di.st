@@ -1,0 +1,1 @@
+FormWindow understands: 'captureDisplay  | br	[br _ BitRect new title: ''BitRect'' in: self frame.	br saveScreenBits.	br copyToForm: form at: 00.	effect _ 0.	]'FormWindow understands: 'turtlemode: trueforframeandcapture	[turtlemode _ trueforframeandcapture.	effect _ 0]'

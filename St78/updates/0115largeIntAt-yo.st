@@ -1,0 +1,1 @@
+LargeInteger understands: ' index | v	[v _ bytes  index.	neg  [ (((bytes  index) lxor: 255) + 1) land: 255].	 v]' classified: 'As yet unclassified'

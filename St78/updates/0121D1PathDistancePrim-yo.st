@@ -1,0 +1,1 @@
+D1Recognizer understands: 'pathDistance: a from: b for: t | ai bi d i 	[d _ 0.0.	for i to: a length do	 [ai _ a  i.	 bi _ b  i.	 d _ d + (t dist: ai and: bi)].	d / a length asFloat] primitive: 240' classified: 'As yet unclassified'

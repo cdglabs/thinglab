@@ -1,0 +1,1 @@
+'Get rid of obsolete UserView instances'| u .  for u from: user class allInstances do [u become: (UserView copy: u)].

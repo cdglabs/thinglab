@@ -1,0 +1,1 @@
+'Fix top window if scheduler is empty'UserView understands: 'topWindow 	[sched length = 0  [nil]	sched  1]' classified: 'as yet unclassified'

@@ -1,0 +1,1 @@
+Object understands: 'learn: methodString  "It''s the wild wild west..." 	[ self class understands: methodString]'

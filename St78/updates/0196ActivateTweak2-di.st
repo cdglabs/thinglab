@@ -1,0 +1,1 @@
+Window understands: 'activate	[(self style: inactive)  false  []	self style: inactive _ false.	user promote: self.	self show]'
