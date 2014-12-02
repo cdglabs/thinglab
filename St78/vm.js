@@ -212,6 +212,132 @@ NT = {
         219, 217, 215, 213, 211, 209, 207, 22, 220, 218, 226, 214, 212, 210, 231, 30,
         203, 201, 199, 197, 195, 193, 191, 8, 204, 202, 200, 198, 196, 194, 192, 192],
     
+    // symbolic NT keycodes (it uses ASCII for 32-126)
+    kbSymbolic: {
+        tab: 9,
+        cr: 13,
+        // Dispframe>>kbd
+        ctld: 132,
+        ctlw: 145,
+        ctlx: 151,
+        // TextImage>>classInit, kbd
+        bs: 8,
+        ctlw: 145, // delete word?
+        cut: 173,
+        paste: 158,
+        esc: 160,
+        // TextImage>>checkLooks
+        ctlb: 166, // bold
+        ctli: 150, // italic
+        ctlminus: 137, 
+        ctlx: 151, // reset emph
+        ctlB: 230, // non-bold
+        ctlI: 214, // non-italic
+        ctlMinus: 201,
+        ctlX: 215, // reset emph
+        ctl0: 135, // font 0
+        ctl1: 159, // font 1
+        ctl2: 144, // font 2
+        ctl3: 143, // font 3
+        ctl4: 128, // font 4
+        ctl5: 127, // font 5
+        ctl6: 129, // font 6
+        ctl7: 131, // font 7
+        ctl8: 180, // font 8
+        ctl9: 149, // font 9
+        ctlShift0: 199, // font 10
+        ctlShift1: 223, // font 11
+        ctlShift2: 208, // font 12
+        ctlShift3: 207, // font 13
+        ctlShift4: 192, // font 14
+        ctlShift5: 191, // font 15
+        ctlt: 240, // toBravo
+        ctlf: 226, // fromBravo
+        // newly assigned
+        smaller: 228,
+        larger: 229,
+        doit: 130,
+        prompt: 167,
+        again: 134,
+        selectAll: 136,
+        compile: 138,
+        undo: 153,
+        cancel: 165,
+        left: 193,
+        right: 194,
+        up: 195,
+        down: 196,
+        pageUp: 197,
+        pageDown: 198,
+        home: 202,
+        end: 203,
+    },
+
+    // key bindings: html keydown code to NT symbolic
+    kbCommands: {
+        '.': "interrupt",
+        'd': "doit",
+        'p': "doit", // printit
+        'D': "prompt",
+        'j': "again",
+        'a': "selectAll",
+        's': "compile",
+        'z': "undo",
+        'l': "cancel",
+        'b': "ctlb", // bold
+        'i': "ctli", // italic
+        'u': "ctlminus", // underline
+        'x': "ctlx", // reset emph
+        'B': "ctlB", // bold
+        'I': "ctlI", // italic
+        'U': "ctlMinus", // underline
+        'X': "ctlX", // reset emph
+        '0': "ctl0", // font change
+        '1': "ctl1",
+        '2': "ctl2",
+        '3': "ctl3",
+        '4': "ctl4",
+        '5': "ctl5",
+        '6': "ctl6",
+        '7': "ctl7",
+        '8': "ctl8",
+        '9': "ctl9",
+        '-': "smaller",
+        '_': "smaller",
+        '+': "larger",
+        '=': "larger",
+    },
+
+    // key bindings: html keypress code to unicode
+    // var 31 = 31;
+    kbSpecial: {
+        35: '↪', // #: Unique string
+        64: '⌾', // @: make point
+        94: '⇑', // ^: return
+        96: 'ⓢ', // `: 's operator
+        1: '◦', // ^A: At
+        3: '▹', // ^C: open Colon
+        4: 'ctld', // ^D
+        5: '∢', // ^E: Eye
+        6: '⇒', // ^F: iF
+        7: '≥', // ^G: Greater or equal
+        // 8: ^H = backspace
+        // 9: ^I = tab
+        12: '≤', // ^L: Lesser or equal
+        // 13: ^M = return
+        14: '≠', // ^N: Not equal
+        17: '◻', // ^Q: sQuare
+        19: 'ⓢ', // ^S: 's operator
+        20: '≡', // ^T: Triple equal
+        21: '↪', // ^U: Unique string
+        22: '➲', // ^V: inVerse arrow
+        23: 'ctlw', // ^W: delete word
+        24: '▱', // ^X
+        29: '◢',  // ^]: doit
+        30: '↑', // ^^: single up arrow
+        31: '¬', // ^_: unary minus
+    },
+
     // encoding of notetaker glyphs as printable unicode chars
     toUnicode: {
         '\x00': "␀",
@@ -249,7 +375,7 @@ NT = {
         '\x7f': "␡",
         '_'   : "←",
         '^'   : "↑",
-    }    
+    },
 };
 
 Object.subclass('users.bert.St78.vm.ObjectTableReader',
