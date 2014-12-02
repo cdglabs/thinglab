@@ -107,8 +107,8 @@ function createDisplay(canvas) {
         buttons: 0,
         keys: [],
         interrupt: false,
-        //fetchMousePos: function() {fetchMousePos(display)},
-        //fetchMouseButtons: function() {fetchMouseButtons(display)},
+        fetchMousePos: fetchMousePos,
+        fetchMouseButtons: fetchMouseButtons,
         // private state below
         buttonsQueue: null, // if null, access is immediate
         mouseDownX: 0,
@@ -119,7 +119,29 @@ function createDisplay(canvas) {
         clipboardStringChanged: false,
     };
 
+    function fetchMouseButtons() {
+        // VM sends fetch: create queue
+        if (!display.buttonsQueue) return display.buttonsQueue = [];
+        var queue = display.buttonsQueue;
+        if (queue.length > 0) {
+            var evt = queue[0],
+                ms = Date.now() - evt.timeStamp;
+            if (!(evt.buttons & 7) && ms < 200) return; // delay up for 200 ms
+            display.buttons = evt.buttons;
+            display.mouseX = evt.x;
+            display.mouseY = evt.y;
+            display.timeStamp = evt.time;
+            queue.shift();
+        }
+    }
+
+    function fetchMousePos() {
+        // VM sends fetch: create queue
+        if (!display.buttonsQueue) return display.buttonsQueue = [];
+    }
+
     function recordMouseEvent(evt) {
+        evt.preventDefault();
         display.timeStamp = evt.timeStamp;
         var buttons = display.buttons & 7;
         if (!display.buttonsQueue || !display.buttonsQueue.length) {
