@@ -76,6 +76,29 @@ Object.extend = function(obj /* + more args */ ) {
             obj[name] = arguments[i][name];
 };
 
+function alertOK(msg) { console.log(msg); }
+
+Object.extend(Array.prototype, {
+    select: Array.prototype.filter,
+    collect: Array.prototype.map,
+    last: function () { return this[this.length - 1]; },
+    include: function (object) { return this.indexOf(object) !== -1 },
+    inject: function (memo, iterator, context) {
+        if (context) iterator = iterator.bind(context);
+        return this.reduce(iterator, memo);
+    },
+    uniq: function (sorted) {
+        return this.inject([], function(array, value, index) {
+            if (0 === index || (sorted ? array.last() != value : !array.include(value))) array.push(value);
+            return array;
+        });
+    },
+});
+
+Object.extend(String.prototype, {
+    startsWith: function(pattern) { return this.indexOf(pattern) === 0; }
+});
+
 //////////////////////////////////////////////////////////////////////////////
 // load vm.js
 //////////////////////////////////////////////////////////////////////////////
