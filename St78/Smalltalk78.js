@@ -169,6 +169,108 @@ function createDisplay(canvas) {
     canvas.onmouseup = recordMouseEvent;
     canvas.oncontextmenu = function() { return false; };
 
+    function recordKeyboardEvent(char, repeatOK) {
+        // char is the code used in the image, which is 
+        // ASCII from 32-126 but custom outside that range
+        // we do a reverse lookup in the keyboard map to find
+        var key = NT.kbMap.indexOf(char) + 1;
+        if (key) {
+            var q = display.keys,
+                repeat = 0;
+            // limit how many repetitions of a key to queue in advance
+            if (!repeatOK)
+                while (repeat < q.length && key == q[q.length - (++repeat)]);
+            if (repeat < 3)
+                q.push(key);
+        }
+    }
+
+    document.onkeydown = function(evt) {
+        display.timeStamp = evt.timeStamp;
+        var code, modifier;
+        switch (evt.keyCode) {
+            case 8:  code = 'bs'; break;
+            case 9:  code = 'tab'; break;
+            case 13: code = 'cr'; break;
+            case 16: modifier = NT.Key_Shift; break;
+            case 17: modifier = NT.Key_Ctrl; break;
+            case 18: modifier = NT.Key_Meta; break;
+            case 27: code = 'esc'; break;
+            case 33: code = 'pageUp'; break;
+            case 34: code = 'pageDown'; break;
+            case 35: code = 'end'; break;
+            case 36: code = 'home'; break;
+            case 37: code = 'left'; break;
+            case 38: code = 'up'; break;
+            case 39: code = 'right'; break;
+            case 40: code = 'down'; break;
+            case 224: modifier = NT.Key_Meta; break;
+        }
+        if (code) { // special key pressed
+            recordKeyboardEvent(NT.kbSymbolic[code]);
+            return evt.preventDefault();
+        }
+        if (modifier) { // modifier pressed
+            display.buttons |= modifier;
+            return evt.preventDefault();
+        }
+        if (evt.ctrlKey || evt.metaKey || evt.altKey) { // clipboard requires special handling
+            var c = String.fromCharCode(evt.which);
+            switch(c && c.toLowerCase()) {
+                // return false to let default handler do its magic
+                case 'c': doKeyCopy(evt); return false;
+                case 'v': doKeyPaste(evt); return false;
+            }
+        }
+        // regular cmd keys. TODO: Windows/Linux?
+        if ((evt.metaKey || evt.altKey) && evt.which) {
+            code = evt.which;
+            if (code >= 65 && code <= 90) {
+                if (!evt.shiftKey) code += 32; // make lowercase
+            } else {
+                if (evt.keyIdentifier && evt.keyIdentifier.slice(0,2) == 'U+')
+                    code = parseInt(evt.keyIdentifier.slice(2), 16)
+            }
+            var command = NT.kbCommands[String.fromCharCode(code)];
+            if (command == "interrupt") {
+                display.interrupt = true;
+            } else recordKeyboardEvent(NT.kbSymbolic[command]);
+            return evt.preventDefault();
+        }
+        //return false;
+    }
+    document.onkeypress = function(evt) {
+        display.timeStamp = evt.timeStamp;
+        var code = evt.charCode;
+        // check for special
+        if (code in NT.kbSpecial) {
+            var char = NT.kbSpecial[code];
+            code = NT.kbSymbolic[char] || char.charCodeAt(0);
+        }
+        // convert back from unicode if needed
+        for (var ntcode in NT.toUnicode) {
+            var unicode = NT.toUnicode[ntcode].charCodeAt(0);
+            if (code == unicode) {
+                code = ntcode.charCodeAt(0);
+                break;
+            }
+        }
+        recordKeyboardEvent(code);
+        evt.preventDefault();
+    }
+    document.onkeyup = function(evt) {
+        var modifier;
+        switch (evt.keyCode) {
+            case 16: modifier = NT.Key_Shift; break;
+            case 17: modifier = NT.Key_Ctrl; break;
+            case 18:
+            case 224: modifier = NT.Key_Meta; break;
+        }
+        if (modifier) {
+            display.buttons &= ~modifier;
+        }
+    }
+        
     return display;
 }
 
