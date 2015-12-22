@@ -166,10 +166,12 @@ function createDisplay(canvas) {
     function recordMouseEvent(evt) {
         evt.preventDefault();
         display.timeStamp = evt.timeStamp;
-        var buttons = display.buttons & 7;
+        var buttons = display.buttons & 7,
+            x = ((evt.pageX - canvas.offsetLeft) * (canvas.width / canvas.offsetWidth)) | 0,
+            y = ((evt.pageY - canvas.offsetTop) * (canvas.height / canvas.offsetHeight)) | 0;
         if (!display.buttonsQueue || !display.buttonsQueue.length) {
-            display.mouseX = evt.layerX;
-            display.mouseY = evt.layerY;
+            display.mouseX = x;
+            display.mouseY = y;
         }
         switch (evt.type) {
             case 'mousemove':
@@ -206,7 +208,7 @@ function createDisplay(canvas) {
                 wasPressed = !!((n ? display.buttonsQueue[n-1].buttons : display.buttons) & 7);
             if (wasPressed !== isPressed)
                 display.buttonsQueue.push(
-                    {buttons: buttons, x: evt.layerX, y: evt.layerY, time: evt.timeStamp});
+                    {buttons: buttons, x: x, y: y, time: evt.timeStamp});
         }
     }
     canvas.onmousedown = recordMouseEvent;
