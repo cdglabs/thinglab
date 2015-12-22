@@ -330,7 +330,8 @@ function interpretLoop() {
     clearTimeout(loop);
     try {
         Smalltalk78.vm.interpret(20, function(ms) {
-            loop = setTimeout(interpretLoop, ms);
+            if (ms > 0) setTimeout(interpretLoop, ms);
+            else        requestAnimationFrame(interpretLoop);
         });
     } catch(error) {
         console.error(error);
