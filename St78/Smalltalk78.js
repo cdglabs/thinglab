@@ -153,14 +153,17 @@ function createDisplay(canvas) {
         return time;
     }
 
+    var downtime = 0;
     function fetchMouseButtons() {
         // VM sends fetch: create queue
         if (!display.buttonsQueue) return display.buttonsQueue = [];
         var queue = display.buttonsQueue;
         if (queue.length > 0) {
             var evt = queue[0],
-                ms = Date.now() - evt.timeStamp;
-            if (!(evt.buttons & 7) && ms < 200) return; // delay up for 200 ms
+                wasPressed = display.buttons & 7,
+                isPressed = evt.buttons & 7;
+            if (isPressed && !wasPressed) downtime = Date.now();
+            if (wasPressed && !isPressed && Date.now() - downtime < 200) return; // delay up for 200 ms
             display.buttons = evt.buttons;
             display.mouseX = evt.x;
             display.mouseY = evt.y;
