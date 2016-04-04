@@ -142,6 +142,17 @@ function createDisplay(canvas) {
         clipboardStringChanged: false,
     };
 
+    var timeOffset = Date.now();
+    function getTimeStamp(evt) {
+        // normalize so timestamps use same epoch as Date.now()
+        var time = evt.timeStamp + timeOffset;
+        if (time > Date.now()) {
+            timeOffset = Math.floor(Date.now() - evt.timeStamp);
+            time = evt.timeStamp + timeOffset;
+        }
+        return time;
+    }
+
     function fetchMouseButtons() {
         // VM sends fetch: create queue
         if (!display.buttonsQueue) return display.buttonsQueue = [];
@@ -165,7 +176,7 @@ function createDisplay(canvas) {
 
     function recordMouseEvent(evt) {
         evt.preventDefault();
-        display.timeStamp = evt.timeStamp;
+        display.timeStamp = getTimeStamp(evt);
         var buttons = display.buttons & 7,
             x = ((evt.pageX - canvas.offsetLeft) * (canvas.width / canvas.offsetWidth)) | 0,
             y = ((evt.pageY - canvas.offsetTop) * (canvas.height / canvas.offsetHeight)) | 0;
@@ -208,7 +219,7 @@ function createDisplay(canvas) {
                 wasPressed = !!((n ? display.buttonsQueue[n-1].buttons : display.buttons) & 7);
             if (wasPressed !== isPressed)
                 display.buttonsQueue.push(
-                    {buttons: buttons, x: x, y: y, time: evt.timeStamp});
+                    {buttons: buttons, x: x, y: y, time: getTimeStamp(evt)});
         }
     }
     canvas.onmousedown = recordMouseEvent;
@@ -233,7 +244,7 @@ function createDisplay(canvas) {
     }
 
     document.onkeydown = function(evt) {
-        display.timeStamp = evt.timeStamp;
+        display.timeStamp = getTimeStamp(evt);
         var code, modifier;
         switch (evt.keyCode) {
             case 8:  code = 'bs'; break;
@@ -287,7 +298,7 @@ function createDisplay(canvas) {
         //return false;
     }
     document.onkeypress = function(evt) {
-        display.timeStamp = evt.timeStamp;
+        display.timeStamp = getTimeStamp(evt);
         var code = evt.charCode;
         // check for special
         if (code in NT.kbSpecial) {
