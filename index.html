@@ -16,6 +16,10 @@
         border-radius: 10px;
         cursor: none;
     }
+    pre {
+        color: #333;
+        display: none;
+    }
 </style>
 <script src="St78/Smalltalk78.js"></script>
 <title>ThingLab</title>
@@ -30,10 +34,69 @@
 
 <p>This is Alan Borning's “ThingLab” running on the <a href="http://lively-web.org/users/bert/Smalltalk-78.html" target="_blank">Smalltalk-78 VM</a> by Bert Freudenberg and Dan Ingalls.</p>
 
+<button id="helpbutton">Help</button>
+
+<pre id="help">
+<b>Mouse</b>
+Left-click:              select       ("red button")
+Right-click:             context menu ("yellow button")
+Ctrl-click/middle-click: window menu  ("blue button")
+<b>Keyboard</b>
+⌾: @ (make point)
+←: _ (assignment)
+⇑: ^ (return)
+ⓢ: ` (backtick, 's operator)
+↑: Ctrl-^ (Ctrl-6)                  ^^
+¬: Ctrl-- (Ctrl-minus, unary minus, ¬1 instead of -1)
+◢: Ctrl-] (Doit)
+◦: Ctrl-A (<b>A</b>t)                      ..
+▹: Ctrl-C (open <b>C</b>olon)              ::
+∢: Ctrl-E (<b>E</b>ye)                     &lt;)
+⇒: Ctrl-F (i<b>F</b>)                      =&gt;
+≥: Ctrl-G (<b>G</b>reater or equal)        >=
+   Ctrl-H (backspace)
+   Ctrl-I (tab)
+≤: Ctrl-L (<b>L</b>ess or equal)           &lt;=
+≠: Ctrl-N (<b>N</b>ot equal)               !=
+↪: Ctrl-U (<b>U</b>nique string, symbol)   #
+ⓢ: Ctrl-S ('s operator, eval in object)
+≡: Ctrl-T (<b>T</b>riple equal, identity)  ==
+➲: Ctrl-V (in<b>V</b>erse arrow)
+◻: Ctrl-Q (s<b>Q</b>uare)
+▱: Ctrl-X (wiggly line)
+#: ## (because # is ↪)
+◣: (no keyboard binding)
+Cmd-C/Alt-C:    copy text
+Cmd-V/Alt-V:    paste text
+Cmd-B/Alt-B:    bold
+Cmd-I/Alt-I:    italic
+Cmd-U/Alt-U:    underline
+Cmd-X/Alt-X:    reset emphasis
+Cmd-0...9, +/-: change font
+Cmd-D           doit
+Cmd-P           printit
+Cmd-S           compile
+Cmd-J           again
+Cmd-A           select all
+Cmd-L           cancel
+Cmd-Z           undo
+Cmd-.           interrupt
+Tab/Shift-Tab   indent/outdent selection
+Ctrl-]  do it in eval (Dispframe in the topleft corner)
+Ctrl-d  done with eval
+</pre>
+
 <script>
 module("ThingLab").requires("Smalltalk78").toRun(function() {
     Smalltalk78.run("thinglab.st78", canvas);
 });
+helpbutton.onclick = function() {
+    if (help.style.display) {
+        help.style.display = '';
+    } else {
+        help.style.display = 'block';
+    }
+}
 </script>
 
 </body>
