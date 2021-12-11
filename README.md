@@ -15,14 +15,15 @@ The Smalltalk-78 interpreter itself is fully functional, and fine for demos, alt
 A few fixes to click delays and event timestamps have been made since the previous summer.
 
 ## Links 
-* http://www.cdglabs.org/thinglab/ (standalone version of ThingLab)
-* http://lively-web.org/users/bert/Smalltalk-78.html (the Smalltalk-78 interpreter; click the "load image" button at the bottom and select "ThingLab" if you want ThingLab rather than ST78 alone)
+* https://cdglabs.github.io/thinglab/ (standalone version of ThingLab)
+* https://github.com/codefrau/Smalltalk78 (the Smalltalk-78 interpreter)
+* https://smalltalkzoo.thechm.org/HOPL-St78.html (a graphical debugger for the Smalltalk-78 interpreter; click the "load image" button at the bottom and select "ThingLab" if you want ThingLab rather than ST78 alone)
 * http://constraints.cs.washington.edu/ui/thinglab-tr.pdf (the original Xerox PARC tech report on ThingLab)
 * http://videosrv14.cs.washington.edu/info/videos/mp4/general/ThingLab_Alan_Borning.mp4 (video of a 1978 Xerox PARC presentation)
-* http://vpri.org/html/writings.php (for documents on Smalltalk-78 itself—set the search criterion to "papers for Historical Context")
+* http://vpri.org/writings.php (for documents on Smalltalk-78 itself—set the search criterion to "papers for Historical Context")
 
 ## People
-Alan Borning and Bert Freudenberg, with work on resurrecting the underlying Smalltalk-78 system by Bert Freudenberg, Dan Ingalls, Ted Kaehler, Yoshiki Oshima, and Alan Kay
+Alan Borning and Vanessa Freudenberg, with work on resurrecting the underlying Smalltalk-78 system by Vanessa Freudenberg, Dan Ingalls, Ted Kaehler, Yoshiki Oshima, and Alan Kay
 
 ## This repository
 
@@ -30,10 +31,10 @@ The [Smalltalk78 VM][St78] is included here using `git subtree`. This means you 
 
 Only if you want to update to the latest VM code, use:
 
-    git subtree pull --prefix=St78 https://github.com/bertfreudenberg/Smalltalk78 master --squash
+    git subtree pull --prefix=St78 https://github.com/codefrau/Smalltalk78 master --squash
 
 And to push local modifications back upstream, use:
 
-    git subtree push --prefix=St78 https://github.com/bertfreudenberg/Smalltalk78 master
+    git subtree push --prefix=St78 https://github.com/codefrau/Smalltalk78 master
 
-[St78]:     https://github.com/bertfreudenberg/Smalltalk78
+[St78]:     https://github.com/codefrau/Smalltalk78
