@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+    body {
+        background: #000;
+    }
+    canvas {
+        position: fixed;
+        background: #000;
+        border-radius: 10px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        cursor: none;
+    }
+</style>
+<script src="../Smalltalk78.js"></script>
+<script src="glfx.js"></script>
+<title>Smalltalk-78</title>
+</head>
+
+<body id="body">
+
+<canvas id="canvas" width="1024" height="768"></canvas>
+
+<script>
+    const { searchParams} = new URL(window.location.href);
+    if (searchParams.get("width")) canvas.width = searchParams.get("width");
+    if (searchParams.get("height")) canvas.height = searchParams.get("height");
+
+    module("St78-Test").requires("Smalltalk78").toRun(function() {
+        NT.BLACK = 0xFF665F3E;
+        NT.WHITE = 0xFFFFF052;
+        Smalltalk78.run("https://smalltalkzoo.thechm.org/images/updated.st78", canvas);
+    });
+
+    fakeCRT(canvas);
+
+    function fakeCRT(source) {
+        // Adapted from
+        // https://www.zachstronaut.com/posts/2012/08/17/webgl-fake-crt-html5.html
+
+        var glcanvas, texture, w, h, hw, hh, w75, lastDraw;
+
+        glcanvas = fx.canvas();
+        glcanvas.onmousedown = e => source.onmousedown(e);
+        glcanvas.onmousemove = e => source.onmousemove(e);
+        glcanvas.onmouseup = e => source.onmouseup(e);
+        glcanvas.oncontextmenu = e => source.oncontextmenu(e);
+        body.appendChild(glcanvas);
+
+        texture = glcanvas.texture(source);
+
+        w = source.width;
+        h = source.height;
+        hw = w / 2;
+        hh = h / 2;
+        radius = Math.max(w, h) * 0.75;
+
+        lastDraw = 0;
+        function animate() {
+            requestAnimationFrame(animate);
+            if (!Smalltalk78.vm || Smalltalk78.vm.primHandler.display.lastDraw === lastDraw) return;
+            lastDraw = Smalltalk78.vm.primHandler.display.lastDraw;
+            texture.loadContentsOf(source);
+            glcanvas.draw(texture)
+                .bulgePinch(hw, hh, radius, 0.12)
+                .vignette(0.25, 0.6)
+                .update();
+        };
+        animate();
+    }
+</script>
+
+</body>
+
+</html>

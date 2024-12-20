@@ -1,0 +1,1 @@
+'Allow workspace to be much smaller'CodeWindow understands: 'fixframe: rect 	[ Rectangle new origin: rect origin extent: (rect extent max: 69  16)]'

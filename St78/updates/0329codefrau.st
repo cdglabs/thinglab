@@ -1,0 +1,1 @@
+| w s p .for w from: user allWindowsInAllProjects do [	w canunderstand: editor  [		s _ w editor text.		p _ s findString: 'Bert,' startingAt: 1.		p > 400  [			user show: p asString; cr.			w editor selectRange: (p to: p+4);				replace: 'Vanessa';				select: 20					]	]]

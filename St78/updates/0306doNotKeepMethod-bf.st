@@ -1,0 +1,1 @@
+'Do not keep methods in MethodKeeper'.MethodKeeper _ (Vector new: 10) asStreamCompiledMethod understands: 'free 	[self refct > 2  ["MethodKeeper next_ self"]	"not needed on JS VM"	self freeLiterals]' classified: 'as yet unclassified'

@@ -1,0 +1,1 @@
+'when editing a file, click window title to change file name'CodeWindow understands: 'editTitle	[super editTitle.	panes1 canunderstand: fileName:  [panes1 fileName: titlepara text]]'

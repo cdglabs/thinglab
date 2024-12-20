@@ -1,0 +1,1 @@
+'Switch update stream to https.NOTE: this update was edited retroactively to reflect the new update stream URL.'updateURL = 'http://smalltalkzoo.thechm.org/users/codefrau/St78/updates/'	[updateURL _ 'https://smalltalkzoo.thechm.org/users/codefrau/St78/updates/']
