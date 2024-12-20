@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013,2014 Bert Freudenberg
+ * Copyright (c) 2013-2020 Vanessa Freudenberg
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -72,7 +72,7 @@ Object.subclass = function(classPath /* + more args */ ) {
 Object.extend = function(obj /* + more args */ ) {
     // skip arg 0, copy properties of other args to obj
     for (var i = 1; i < arguments.length; i++)
-        for (name in arguments[i])
+        for (var name in arguments[i])
             obj[name] = arguments[i][name];
 };
 
@@ -99,6 +99,21 @@ Object.extend(String.prototype, {
     startsWith: function(pattern) { return this.indexOf(pattern) === 0; }
 });
 
+window.Strings = {
+    format: function(template) {
+        var args = arguments,
+            arg = 0;
+        return template.replace(/%s/g, function() {return args[++arg]});
+    }
+};
+
+window.$world = {
+    inform: window.alert,
+    prompt: function(text, callback, defaultText) {
+        callback(window.prompt(text, defaultText));
+    },
+};
+
 //////////////////////////////////////////////////////////////////////////////
 // load vm.js
 //////////////////////////////////////////////////////////////////////////////
@@ -113,7 +128,7 @@ Object.extend(String.prototype, {
     document.getElementsByTagName("head")[0].appendChild(script);
 })();
 
-module("Smalltalk78").requires("users.bert.St78.vm").toRun(function() {
+module("Smalltalk78").requires("users.codefrau.St78.vm").toRun(function() {
 
 //////////////////////////////////////////////////////////////////////////////
 // display & event setup
@@ -124,7 +139,8 @@ function createDisplay(canvas) {
         ctx: canvas.getContext("2d"),
         width: canvas.width,
         height: canvas.height,
-        timeStamp: Date.now(),
+        timeStamp: Date.now(), // for idle detection
+        lastDraw: 0,
         mouseX: 0,
         mouseY: 0,
         buttons: 0,
@@ -142,14 +158,28 @@ function createDisplay(canvas) {
         clipboardStringChanged: false,
     };
 
+    var timeOffset = Date.now();
+    function getTimeStamp(evt) {
+        // normalize so timestamps use same epoch as Date.now()
+        var time = evt.timeStamp + timeOffset;
+        if (time > Date.now()) {
+            timeOffset = Math.floor(Date.now() - evt.timeStamp);
+            time = evt.timeStamp + timeOffset;
+        }
+        return time;
+    }
+
+    var downtime = 0;
     function fetchMouseButtons() {
         // VM sends fetch: create queue
         if (!display.buttonsQueue) return display.buttonsQueue = [];
         var queue = display.buttonsQueue;
         if (queue.length > 0) {
             var evt = queue[0],
-                ms = Date.now() - evt.timeStamp;
-            if (!(evt.buttons & 7) && ms < 200) return; // delay up for 200 ms
+                wasPressed = display.buttons & 7,
+                isPressed = evt.buttons & 7;
+            if (isPressed && !wasPressed) downtime = Date.now();
+            if (wasPressed && !isPressed && Date.now() - downtime < 200) return; // delay up for 200 ms
             display.buttons = evt.buttons;
             display.mouseX = evt.x;
             display.mouseY = evt.y;
@@ -165,11 +195,13 @@ function createDisplay(canvas) {
 
     function recordMouseEvent(evt) {
         evt.preventDefault();
-        display.timeStamp = evt.timeStamp;
-        var buttons = display.buttons & 7;
+        display.timeStamp = getTimeStamp(evt);
+        var buttons = display.buttons & 7,
+            x = (evt.offsetX * (canvas.width / canvas.offsetWidth)) | 0,
+            y = (evt.offsetY * (canvas.height / canvas.offsetHeight)) | 0;
         if (!display.buttonsQueue || !display.buttonsQueue.length) {
-            display.mouseX = evt.layerX;
-            display.mouseY = evt.layerY;
+            display.mouseX = x;
+            display.mouseY = y;
         }
         switch (evt.type) {
             case 'mousemove':
@@ -206,7 +238,7 @@ function createDisplay(canvas) {
                 wasPressed = !!((n ? display.buttonsQueue[n-1].buttons : display.buttons) & 7);
             if (wasPressed !== isPressed)
                 display.buttonsQueue.push(
-                    {buttons: buttons, x: evt.layerX, y: evt.layerY, time: evt.timeStamp});
+                    {buttons: buttons, x: x, y: y, time: getTimeStamp(evt)});
         }
     }
     canvas.onmousedown = recordMouseEvent;
@@ -215,7 +247,7 @@ function createDisplay(canvas) {
     canvas.oncontextmenu = function() { return false; };
 
     function recordKeyboardEvent(char, repeatOK) {
-        // char is the code used in the image, which is 
+        // char is the code used in the image, which is
         // ASCII from 32-126 but custom outside that range
         // we do a reverse lookup in the keyboard map to find
         var key = NT.kbMap.indexOf(char) + 1;
@@ -230,8 +262,59 @@ function createDisplay(canvas) {
         }
     }
 
+    function doKeyCopy(evt) {
+        if (!navigator.clipboard) return;
+        // simulate copy event for Smalltalk so it places text in clipboard
+        recordKeyboardEvent(NT.kbSymbolic['cut']);
+        // now interpret until Smalltalk has copied to the clipboard
+        display.clipboardStringChanged = false;
+        var start = Date.now();
+        while (!display.clipboardStringChanged && Date.now() - start < 500)
+            display.vm.interpret(20);
+        if (!display.clipboardStringChanged) {
+            console.log("timeout, image did not copy to clipboard");
+            return;
+        }
+        // got it, now copy to the system clipboard
+        navigator.clipboard.writeText(display.clipboardString)
+            .catch(function(err) { console.error("display: copy error " + err.message); });
+    }
+
+    function doKeyPaste(evt) {
+        if (!navigator.clipboard) return;
+        navigator.clipboard
+        .readText()
+        .then(function(clipText) {
+            display.clipboardString = clipText;
+            // simulate paste keyboard event for St78
+            display.keys = []; //  flush other keys
+            recordKeyboardEvent(NT.kbSymbolic['paste']);
+            // now interpret until Smalltalk has read from the clipboard
+            display.clipboardStringChanged = true;
+            var start = Date.now();
+            while (display.clipboardStringChanged && Date.now() - start < 500)
+                display.vm.interpret(20);
+            // if image has not used the clipboard prim, simulate key events
+            if (display.clipboardStringChanged) {
+                console.log("No paste primitive, simulating via keyboard");
+                recordKeyboardEvent(8); // backspace
+                for (var i = 0; i < display.clipboardString.length; i++) {
+                    var char = display.clipboardString.charCodeAt(i);
+                    for (var ntcode in NT.toUnicode) {
+                        var unicode = NT.toUnicode[ntcode].charCodeAt(0);
+                        if (char == unicode) {
+                            char = ntcode.charCodeAt(0);
+                            break;
+                        }
+                    }
+                    recordKeyboardEvent(char, true);
+                }
+            }
+        }).catch(function(err) { console.error("display: paste error " + err.message); });;
+    }
+
     document.onkeydown = function(evt) {
-        display.timeStamp = evt.timeStamp;
+        display.timeStamp = getTimeStamp(evt);
         var code, modifier;
         switch (evt.keyCode) {
             case 8:  code = 'bs'; break;
@@ -285,7 +368,7 @@ function createDisplay(canvas) {
         //return false;
     }
     document.onkeypress = function(evt) {
-        display.timeStamp = evt.timeStamp;
+        display.timeStamp = getTimeStamp(evt);
         var code = evt.charCode;
         // check for special
         if (code in NT.kbSpecial) {
@@ -315,7 +398,7 @@ function createDisplay(canvas) {
             display.buttons &= ~modifier;
         }
     }
-        
+
     return display;
 }
 
@@ -324,13 +407,11 @@ function createDisplay(canvas) {
 // main loop
 //////////////////////////////////////////////////////////////////////////////
 
-var loop; // holds timeout for main loop
-
 function interpretLoop() {
-    clearTimeout(loop);
     try {
         Smalltalk78.vm.interpret(20, function(ms) {
-            loop = setTimeout(interpretLoop, ms);
+            if (ms > 0) setTimeout(interpretLoop, ms);
+            else        requestAnimationFrame(interpretLoop);
         });
     } catch(error) {
         console.error(error);
@@ -338,30 +419,99 @@ function interpretLoop() {
     }
 }
 
-function runImage(buffer, imageName, canvas) {
-    var display = createDisplay(canvas),
-        image = users.bert.St78.vm.Image.readFromBuffer(buffer, imageName);
-    Smalltalk78.vm = new users.bert.St78.vm.Interpreter(image, display);
+function runImage(image, canvas) {
+    window.localStorage['notetakerImageName'] = image.name;
+    var display = createDisplay(canvas);
+    Smalltalk78.vm = new St78.vm.Interpreter(image, display);
     window.onbeforeunload = function() {
         return "Smalltalk78 is still running";
     };
     interpretLoop();
 }
 
-Smalltalk78.run = function(imageUrl, canvas) {
+function downloadImage(imageUrl, imageName, thenDo, elseDo) {
     var rq = new XMLHttpRequest();
     rq.open("get", imageUrl, true);
     rq.responseType = "arraybuffer";
     rq.onload = function(e) {
         if (rq.status == 200) {
-            runImage(rq.response, imageUrl, canvas); 
+            var buffer = rq.response;
+            St78.vm.Image.saveBufferAs(buffer, imageName);
+            thenDo(buffer);
         }
         else rq.onerror(rq.statusText);
     };
-    rq.onerror = function(e) {
-        alert("Failed to download:\n" + imageUrl);
-    }
+    rq.onerror = elseDo;
     rq.send();
+}
+
+function loadImage(imageName, thenDo, elseDo) {
+    // this is the counterpart to saveBufferAs in vm.js
+    // (it's not in vm.js because Lively has its own implementation)
+    if (location.search.includes("fresh")) return elseDo();
+    if (window.webkitRequestFileSystem) {
+        window.webkitRequestFileSystem(PERSISTENT, 100*1024*1024, function(fs) {
+            fs.root.getFile(imageName, {create: false}, function(fileEntry) {
+                fileEntry.file(function(file) {
+                    var reader = new FileReader();
+                    reader.onload = function(e) { thenDo(this.result); };
+                    reader.onerror = elseDo;
+                    reader.readAsArrayBuffer(file);
+                }, elseDo);
+            }, elseDo);
+        }, elseDo);
+    } else {
+        var imageString = window.localStorage['notetakerImage:' + imageName];
+        if (imageString) {
+            var words = new Uint16Array(imageString.length);
+            for (var i = 0; i < words.length; i++)
+                words[i] = imageString.charCodeAt(i) & 0xFFFF;
+            return thenDo(words.buffer);
+        }
+        elseDo();
+    }
+}
+
+// It's 2024. We can use modern JS now.
+async function runNotetakerFiles(url, imageName, canvas) {
+    // this is a special case for the original Notetaker files
+    // which have a different format than the images we write
+    const files = ["ObjectTable.nt", "ObjectSpace.nt"];
+    const responses = await Promise.all(files.map(file => fetch(url + "/" + file)));
+    const buffers = await Promise.all(responses.map(response => response.arrayBuffer()));
+    const objectTable = new Uint8Array(buffers[0]);
+    const objectSpace = new Uint8Array(buffers[1]);
+    const image = St78.vm.Image.readFromObjectTable(objectTable, objectSpace, imageName);
+    runImage(image, canvas);
+}
+
+Smalltalk78.run = function(imageUrl, canvas) {
+    // we let ?image=... override the image name (could be a full URL too)
+    // otherwise the last-saved image name is used
+    // the image then is loaded from browser storage unless ?fresh is given,
+    // in which case it's always downloaded
+    // the special image name "notetaker" will load the original unmodified
+    // Notetaker files from ~1978, rather than the default image, which has
+    // been updated (implies ?fresh)
+    var searchParams = new URLSearchParams(location.search);
+    if (searchParams.get('image')) {
+        imageUrl = searchParams.get('image');
+    } else if (localStorage['notetakerImageName'] && searchParams.get('fresh') == null) {
+        imageUrl = localStorage['notetakerImageName'];
+    }
+    // now load the image, and if that fails, try to download it
+    var url = new URL(imageUrl, document.location);
+    var imageName = url.pathname.substring(url.pathname.lastIndexOf('/') + 1);
+    if (imageName == "notetaker") return runNotetakerFiles(url, imageName, canvas);
+    function run(buffer) {
+        var image = St78.vm.Image.readFromBuffer(buffer, imageName);
+        runImage(image, canvas);
+    }
+    loadImage(imageName, run, function() {
+        downloadImage(imageUrl, imageName, run, function() {
+            alert("Failed to download: " + imageUrl);
+        });
+    });
 }
 
 // end of module

@@ -1,0 +1,1 @@
+'Clean out MethodKeeper'MethodKeeper _ (Vector new: 10) asStream

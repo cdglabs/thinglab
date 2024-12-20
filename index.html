@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+    body {
+        background: #888;
+        color: #EEE;
+        font-family: Avenir, sans-serif;
+    }
+    a {
+        color: #EEE;
+    }
+    canvas {
+        background: #000;
+        border-radius: 10px;
+        cursor: none;
+    }
+    pre {
+        color: #000;
+        line-height: 1.5;
+        display: none;
+        background: #EEE;
+        padding: 10px;
+        border-radius: 10px;
+        width: fit-content;
+    }
+    body.fullscreen {
+        background: #000;
+    }
+    body.fullscreen #ui {
+        display: none;
+    }
+    body.fullscreen #canvas {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border-radius: 0;
+    }
+</style>
+<script src="Smalltalk78.js"></script>
+<title>Smalltalk-78</title>
+</head>
+
+<body id="body">
+
+<canvas id="canvas" width="1024" height="768"></canvas>
+
+<p id="ui">
+
+This is a test page for the <a href="https://github.com/codefrau/Smalltalk78">Smalltalk-78</a> VM
+by Vanessa Freudenberg and Dan Ingalls. Not all functions of the
+<a href="https://smalltalkzoo.thechm.org/HOPL-St78.html">full environment</a> are supported.
+
+<br>
+
+<button id="helpbutton">Mouse and Keyboard Help</button>
+
+<pre id="help">
+<b>Mouse</b>
+Left-click:              select       ("red button")
+Right-click:             context menu ("yellow button")
+Ctrl-click/middle-click: window menu  ("blue button")
+<b>Keyboard</b>
+⌾: @ (make point)
+←: _ (assignment)
+⇑: ^ (return)
+ⓢ: ` (backtick, 's operator)
+↑: Ctrl-^ (Ctrl-6)                  ^^
+¬: Ctrl-- (Ctrl-minus, unary minus, ¬1 instead of -1)
+◢: Ctrl-] (Doit)
+◦: Ctrl-A (<b>A</b>t)                      ..
+⦂: Ctrl-C (open <b>C</b>olon)              ::
+∢: Ctrl-E (<b>E</b>ye)                     &lt;)
+⇒: Ctrl-F (i<b>F</b>)                      =&gt;
+≥: Ctrl-G (<b>G</b>reater or equal)        >=
+   Ctrl-H (backspace)
+   Ctrl-I (tab)
+≤: Ctrl-L (<b>L</b>ess or equal)           &lt;=
+≠: Ctrl-N (<b>N</b>ot equal)               !=
+↪: Ctrl-U (<b>U</b>nique string, symbol)   #
+ⓢ: Ctrl-S ('s operator, eval in object)
+≡: Ctrl-T (<b>T</b>riple equal, identity)  ==
+➲: Ctrl-V (in<b>V</b>erse arrow)
+◻: Ctrl-Q (s<b>Q</b>uare)
+▱: Ctrl-X (wiggly line)
+#: ## (because # is ↪)
+◣: (no keyboard binding)
+Cmd-C/Alt-C:    copy text
+Cmd-V/Alt-V:    paste text
+Cmd-B/Alt-B:    bold
+Cmd-I/Alt-I:    italic
+Cmd-U/Alt-U:    underline
+Cmd-X/Alt-X:    reset emphasis
+Cmd-0...9, +/-: change font
+Cmd-D           doit
+Cmd-P           printit
+Cmd-S           compile
+Cmd-J           again
+Cmd-A           select all
+Cmd-L           cancel
+Cmd-Z           undo
+Cmd-.           interrupt
+Tab/Shift-Tab   indent/outdent selection
+Ctrl-]  do it in eval (Dispframe in the topleft corner)
+Ctrl-d  done with eval
+</pre>
+
+</p>
+
+<script>
+    let width, height, fullscreen, black, white;
+    const params = new URL(window.location.href).searchParams;
+    if (params.has("alto")) {
+        width = 608;
+        height = 808;
+        fullscreen = true;
+        black = 0x3E5F66;
+        white = 0x52F0FF;
+    }
+    if (params.get("width")) width = +params.get("width");
+    if (params.get("height")) height = +params.get("height");
+    if (params.has("fullscreen")) fullscreen = true;
+    if (params.has("black")) black = +("0xFF" + params.get("black"));
+    if (params.has("white")) white = +("0xFF" + params.get("white"));
+
+    if (width) canvas.width = width;
+    if (height) canvas.height = height;
+    if (fullscreen) {
+        body.classList.add("fullscreen");
+        if (black) body.style.backgroundColor = "#" + black.toString(16).slice(-6);
+    }
+
+    module("main").requires("Smalltalk78").toRun(function() {
+        if (black) NT.BLACK = 0xFF000000 | ((black & 0xFF0000) >> 16) | (black & 0xFF00) | ((black & 0xFF) << 16);
+        if (white) NT.WHITE = 0xFF000000 | ((white & 0xFF0000) >> 16) | (white & 0xFF00) | ((white & 0xFF) << 16);
+        Smalltalk78.run("https://smalltalkzoo.thechm.org/images/updated.st78", canvas);
+    });
+
+    helpbutton.onclick = function() {
+        if (help.style.display) {
+            help.style.display = '';
+            canvas.scrollIntoView({ behavior: 'smooth' });
+        } else {
+            help.style.display = 'block';
+            helpbutton.scrollIntoView({ behavior: 'smooth' });
+        }
+    }
+</script>
+
+</body>
+
+</html>

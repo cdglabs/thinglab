@@ -1,0 +1,1 @@
+Class new title: OpaqueForm	subclassof: Form	fields: 'mask'	declare: '';	classified: 'Graphical Objects'OpaqueForm understands: 'displayat: pt in: destForm  	[mask displayat: pt effect: compSource+anding "erase mode" in: destForm.	self displayat: pt effect: oring in: destForm]'OpaqueForm understands: 'mask: maskForm	[mask _ maskForm]'

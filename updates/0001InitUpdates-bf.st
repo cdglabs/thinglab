@@ -1,1 +1,1 @@
-'Declare updateLevel and updateURL'[Smalltalk has: updateLevel  []Smalltalk declare: updateLevel as: 0.Smalltalk declare: updateURL as: 'http://lively-web.org/users/bert/St78/updates/']
+'Declare updateLevel and updateURLNOTE: this update was edited retroactively to reflect the new update stream URL.'[Smalltalk has: updateLevel  []Smalltalk declare: updateLevel as: 0.Smalltalk has: updateURL  []Smalltalk declare: updateURL as: 'https://smalltalkzoo.thechm.org/users/codefrau/St78/updates/']

@@ -1,0 +1,1 @@
+CodeWindow understands: 'editTitle	[super editTitle.	((panes1) canunderstand: fileName:)  [		(panes1) fileName: title].]'
