@@ -17,24 +17,45 @@
         cursor: none;
     }
     pre {
-        color: #333;
+        background: #EEE;
+        color: #000;
+        line-height: 1.5;
         display: none;
+        padding: 10px;
+        border-radius: 10px;
+        width: fit-content;
+    }
+    body.fullscreen {
+        background: #000;
+    }
+    body.fullscreen > *:not(canvas) {
+        display: none;
+    }
+    body.fullscreen #canvas {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border-radius: 0;
     }
 </style>
 <script src="St78/Smalltalk78.js"></script>
 <title>ThingLab</title>
 </head>
 
-<body>
-<a href="http://cdglabs.org/" target="_blank"><img src="cdg-logo.svg" width="75" height="75" align="right"></a>
+<body id="body">
+<a href="https://cdglabs.github.io" target="_blank"><img src="cdg-logo.svg" width="75" height="75" align="right"></a>
 
 <h1>ThingLab</h1>
 
 <canvas id="canvas" width="1024" height="768"></canvas>
 
-<p>This is Alan Borning's “ThingLab” running on the <a href="http://lively-web.org/users/bert/Smalltalk-78.html" target="_blank">Smalltalk-78 VM</a> by Bert Freudenberg and Dan Ingalls.</p>
+<p>This is Alan Borning's <a href="https://github.com/cdglabs/thinglab?#ThingLab" target="_blank">ThingLab</a>
+(1979) running on the <a href="https://github.com/codefrau/Smalltalk78" target="_blank">Smalltalk-78</a> VM
+by Vanessa Freudenberg and Dan Ingalls</p>
 
-<button id="helpbutton">Help</button>
+<button id="helpbutton">Mouse and Keyboard Help</button>
+<button id="fullscreenbutton">Fullscreen</button>
 
 <pre id="help">
 <b>Mouse</b>
@@ -50,7 +71,7 @@ Ctrl-click/middle-click: window menu  ("blue button")
 ¬: Ctrl-- (Ctrl-minus, unary minus, ¬1 instead of -1)
 ◢: Ctrl-] (Doit)
 ◦: Ctrl-A (<b>A</b>t)                      ..
-▹: Ctrl-C (open <b>C</b>olon)              ::
+⦂: Ctrl-C (open <b>C</b>olon)              ::
 ∢: Ctrl-E (<b>E</b>ye)                     &lt;)
 ⇒: Ctrl-F (i<b>F</b>)                      =&gt;
 ≥: Ctrl-G (<b>G</b>reater or equal)        >=
@@ -87,16 +108,35 @@ Ctrl-d  done with eval
 </pre>
 
 <script>
-module("ThingLab").requires("Smalltalk78").toRun(function() {
-    Smalltalk78.run("thinglab.st78", canvas);
-});
-helpbutton.onclick = function() {
-    if (help.style.display) {
-        help.style.display = '';
-    } else {
-        help.style.display = 'block';
+    const params = new URLSearchParams(location.hash.slice(1));
+    if (params.get("width")) canvas.width = +params.get("width");
+    if (params.get("height")) canvas.height = +params.get("height");
+    if (params.has("fullscreen")) body.classList.add("fullscreen");
+
+    module("ThingLab").requires("Smalltalk78").toRun(() => {
+        Smalltalk78.run("thinglab.st78", canvas)
+    });
+
+    let timeout;
+    helpbutton.onclick = () => {
+        clearTimeout(timeout);
+        if (help.style.display) {
+            canvas.scrollIntoView({ behavior: 'smooth' });
+            timeout = setTimeout(() => help.style.display = '', 1000);
+        } else {
+            help.style.display = 'block';
+            helpbutton.scrollIntoView({ behavior: 'smooth' });
+        }
     }
-}
+
+    fullscreenbutton.onclick = () => {
+        canvas.requestFullscreen();
+    }
+
+    document.onfullscreenchange = () => {
+        const isFullscreen = document.fullscreenElement === canvas;
+        body.classList.toggle("fullscreen", isFullscreen);
+    }
 </script>
 
 </body>

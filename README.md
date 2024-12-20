@@ -1,8 +1,8 @@
 # ThingLab
 
-ThingLab was an application originally written in Smalltalk-76 by Alan Borning as part of his PhD dissertation work.  It was a constraint-based simulation laboratory, which allowed users to construct such things as demonstrations of geometric theorems, physics simulations of e.g. electrical circuits or bridges under load, graphical constraint-based calculators, and graphical layouts.  It is in many ways a further development of Ivan Sutherland's Sketchpad, and shares with Sketchpad the goals of using constraints for interactive graphics, and graphical construction of constrained objects.  It extends Sketchpad by adding additional application domains, providing support for a "kit-building kit" metaphor, and integration of constraints with part-whole hierarchies and Smalltalk's class hierarchy.  
+ThingLab was an application originally written in Smalltalk-76 by Alan Borning as part of his PhD dissertation work.  It was a constraint-based simulation laboratory, which allowed users to construct such things as demonstrations of geometric theorems, physics simulations of e.g. electrical circuits or bridges under load, graphical constraint-based calculators, and graphical layouts.  It is in many ways a further development of Ivan Sutherland's Sketchpad, and shares with Sketchpad the goals of using constraints for interactive graphics, and graphical construction of constrained objects.  It extends Sketchpad by adding additional application domains, providing support for a "kit-building kit" metaphor, and integration of constraints with part-whole hierarchies and Smalltalk's class hierarchy.
 
-For this project, we have the original ThingLab code from 1979 running in a newly implemented Smalltalk-78 interpreter in Lively/Javascript.  The interpreter is a resurrected version of the Smalltalk-78 system that ran on the Notetaker computer in 1979, with additional features restored from Smalltalk-76 that had been stripped out because of the Notetaker's limited hardware resources.  These implementations of Smalltalk-78 and ThingLab provide an important start on a novel way of exhibiting historic software systems.  They are more realistic than a re-implementation in a current programming language — the screen, the windows, the user interaction, and even the fonts are from the 35 year old version.  It's not the same as running on an original Alto or modern replica (probably the only possibility for even more realism) — but are much more widely accessible, to anyone with a modern browser, and surprisingly way faster (even though it is running on a ST78 interpreter written in Javascript).
+For this project, we have the original ThingLab code from 1979 running in a newly implemented Smalltalk-78 interpreter in Lively/Javascript.  The interpreter is a resurrected version of the Smalltalk-78 system that ran on the Notetaker computer in 1979, with additional features restored from Smalltalk-76 that had been stripped out because of the Notetaker's limited hardware resources.  These implementations of Smalltalk-78 and ThingLab provide an important start on a novel way of exhibiting historic software systems.  They are more realistic than a re-implementation in a current programming language — the screen, the windows, the user interaction, and even the fonts are from the 45 year old version (as of 2024).  It's not the same as running on an original Alto or modern replica (probably the only possibility for even more realism) — but are much more widely accessible, to anyone with a modern browser, and surprisingly way faster (even though it is running on a ST78 interpreter written in Javascript).
 
 ## Status
 
@@ -14,7 +14,10 @@ The Smalltalk-78 interpreter itself is fully functional, and fine for demos, alt
 #### April 2016
 A few fixes to click delays and event timestamps have been made since the previous summer.
 
-## Links 
+#### December 2024
+No changes to ThingLab itself, but updates to the Smalltalk-78 VM code and the web UI.
+
+## Links
 * https://cdglabs.github.io/thinglab/ (standalone version of ThingLab)
 * https://github.com/codefrau/Smalltalk78 (the Smalltalk-78 interpreter)
 * https://smalltalkzoo.thechm.org/HOPL-St78.html (a graphical debugger for the Smalltalk-78 interpreter; click the "load image" button at the bottom and select "ThingLab" if you want ThingLab rather than ST78 alone)
@@ -31,10 +34,10 @@ The [Smalltalk78 VM][St78] is included here using `git subtree`. This means you 
 
 Only if you want to update to the latest VM code, use:
 
-    git subtree pull --prefix=St78 https://github.com/codefrau/Smalltalk78 master --squash
+    git subtree pull --prefix=St78 https://github.com/codefrau/Smalltalk78 main --squash
 
 And to push local modifications back upstream, use:
 
-    git subtree push --prefix=St78 https://github.com/codefrau/Smalltalk78 master
+    git subtree push --prefix=St78 https://github.com/codefrau/Smalltalk78 main
 
 [St78]:     https://github.com/codefrau/Smalltalk78
