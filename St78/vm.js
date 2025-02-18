@@ -1,6 +1,6 @@
 module('users.codefrau.St78.vm').requires().toRun(function() {
 /*
- * Copyright (c) 2013-2020 Vanessa Freudenberg and Dan Ingalls
+ * Copyright (c) 2013-2025 Vanessa Freudenberg and Dan Ingalls
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,9 +21,12 @@ module('users.codefrau.St78.vm').requires().toRun(function() {
  * THE SOFTWARE.
  */
 
+// Alias for shorter class paths
+St78 = users.codefrau.St78;
 
+// Constants, accessible without path for brevity
 NT = {
-    VM_DATE: "2024-01-11",
+    VM_DATE: "2025-02-12",
 
     MAX_INSTSIZE: 0x100000, // arbitrary limit on instance size
     largeOops: true, // automatically switch to 32 bit image format
@@ -55,129 +58,129 @@ NT = {
     OOP_TAG_SMALL: 0x1E,  // tag for 16 bit size header
     OOP_TAG_LARGE: 0x1F,  // tag for 32 bit size header
 
-	// CLCLASS layout:
-	PI_CLASS_TITLE: 0,
-	PI_CLASS_MYINSTVARS: 1,
-	PI_CLASS_INSTSIZE: 2,
-	PI_CLASS_MDICT: 3,
-	PI_CLASS_CLASSVARS: 4,
-	PI_CLASS_SUPERCLASS: 5,
-	PI_CLASS_ENVIRONMENT: 6,
+    // CLCLASS layout:
+    PI_CLASS_TITLE: 0,
+    PI_CLASS_MYINSTVARS: 1,
+    PI_CLASS_INSTSIZE: 2,
+    PI_CLASS_MDICT: 3,
+    PI_CLASS_CLASSVARS: 4,
+    PI_CLASS_SUPERCLASS: 5,
+    PI_CLASS_ENVIRONMENT: 6,
 
-	// CLSTREAM layout:
-	PI_STREAM_ARRAY: 0,
-	PI_STREAM_POSITION: 1,
-	PI_STREAM_LIMIT: 2,
+    // CLSTREAM layout:
+    PI_STREAM_ARRAY: 0,
+    PI_STREAM_POSITION: 1,
+    PI_STREAM_LIMIT: 2,
 
-	// CLPROCESS layout:
-	PI_PROCESS_MINSIZE: 0,		// THEPROCESS: 128
-	PI_PROCESS_HWM: 1,			// THEPROCESS: 0
-	PI_PROCESS_TOP: 2,			// THEPROCESS: 7
-	PI_PROCESS_RESTARTCODE: 3,	// THEPROCESS: NIL
-	PI_PROCESS_STACK: 4,		// THEPROCESS: NIL
-	PN_PROCESS: 5,   	    	// number of fixed pointers
+    // CLPROCESS layout:
+    PI_PROCESS_MINSIZE: 0,		// THEPROCESS: 128
+    PI_PROCESS_HWM: 1,			// THEPROCESS: 0
+    PI_PROCESS_TOP: 2,			// THEPROCESS: 7
+    PI_PROCESS_RESTARTCODE: 3,	// THEPROCESS: NIL
+    PI_PROCESS_STACK: 4,		// THEPROCESS: NIL
+    PN_PROCESS: 5,   	    	// number of fixed pointers
 
-	// CLREMOTECODE layout:
-	PI_RCODE_FRAMEOFFSET: 0,
-	PI_RCODE_STARTINGPC: 1,
-	PI_RCODE_PROCESS: 2,
-	PI_RCODE_STACKOFFSET: 3,
+    // CLREMOTECODE layout:
+    PI_RCODE_FRAMEOFFSET: 0,
+    PI_RCODE_STARTINGPC: 1,
+    PI_RCODE_PROCESS: 2,
+    PI_RCODE_STACKOFFSET: 3,
 
-	// CLHASHSET layout:
-	PI_HASHSET_OBJECTS: 0,
+    // CLHASHSET layout:
+    PI_HASHSET_OBJECTS: 0,
 
-	// CLDICTIONARY layout:
-	PI_DICTIONARY_OBJECTS: 0,
-	PI_DICTIONARY_VALUES: 1,
+    // CLDICTIONARY layout:
+    PI_DICTIONARY_OBJECTS: 0,
+    PI_DICTIONARY_VALUES: 1,
 
-	// CLSYMBOLTABLE layout:
-	PI_SYMBOLTABLE_OBJECTS: 0,
-	PI_SYMBOLTABLE_VALUES: 1,
+    // CLSYMBOLTABLE layout:
+    PI_SYMBOLTABLE_OBJECTS: 0,
+    PI_SYMBOLTABLE_VALUES: 1,
 
-	// CLMESSAGEDICT layout:
-	PI_MESSAGEDICT_OBJECTS: 0,
-	PI_MESSAGEDICT_METHODS: 1,
+    // CLMESSAGEDICT layout:
+    PI_MESSAGEDICT_OBJECTS: 0,
+    PI_MESSAGEDICT_METHODS: 1,
 
-	// CLOBJECTREFERENCE layout:
-	PI_OBJECTREFERENCE_VALUE: 0,
+    // CLOBJECTREFERENCE layout:
+    PI_OBJECTREFERENCE_VALUE: 0,
 
-	// CLCOMPILEDMETHOD layout:
-	BI_COMPILEDMETHOD_FIRSTLITERAL: 2,	// past method header
-	PC_BIAS: 2,	// due to NT's shorter header format
+    // CLCOMPILEDMETHOD layout:
+    BI_COMPILEDMETHOD_FIRSTLITERAL: 2,	// past method header
+    PC_BIAS: 2,	// due to NT's shorter header format
 
-	// CLPOINT layout:
-	PI_POINT_X: 0,
-	PI_POINT_Y: 1,
+    // CLPOINT layout:
+    PI_POINT_X: 0,
+    PI_POINT_Y: 1,
 
-	// CLLARGEINTEGER layout:
-	PI_LARGEINTEGER_BYTES: 0,
-	PI_LARGEINTEGER_NEG: 1,
+    // CLLARGEINTEGER layout:
+    PI_LARGEINTEGER_BYTES: 0,
+    PI_LARGEINTEGER_NEG: 1,
 
-	/*  | i . (1 to: TextScanner instvars length) transform⦂ i to⦂ [(i-1),(TextScanner instvars◦i)] ==>
-	((0 'function' ) (1 'color' ) (2 'destbase' ) (3 'destraster' ) (4 'destx' ) (5 'desty' ) (6 'width' ) (7 'height' ) (8 'sourcebase' ) (9 'sourceraster' ) (10 'sourcex' ) (11 'sourcey' ) (12 'clipx' ) (13 'clipy' ) (14 'clipwidth' ) (15 'clipheight' ) (16 'sourcefield' ) (17 'destfield' ) (18 'source' ) (19 'dest' ) (20 'sstrike' ) (21 'dstrike' ) (22 'printing' ) (23 'chari' ) (24 'stopx' ) (25 'xtable' ) (26 'exceptions' ) (27 'spacecount' ) (28 'spacei' ) (29 'spacex' ) (30 'charpad' ) (31 'text' ) (32 'spacesize' ) (33 'style' ) (34 'para' ) (35 'font' ) (36 'fontno' ) (37 'minascii' ) (38 'maxascii' ) (39 'glyphs' ) (40 'frame' ) (41 'looktype' ) (42 'kern' ) ) */
+    /*  | i . (1 to: TextScanner instvars length) transform⦂ i to⦂ [(i-1),(TextScanner instvars◦i)] ==>
+    ((0 'function' ) (1 'color' ) (2 'destbase' ) (3 'destraster' ) (4 'destx' ) (5 'desty' ) (6 'width' ) (7 'height' ) (8 'sourcebase' ) (9 'sourceraster' ) (10 'sourcex' ) (11 'sourcey' ) (12 'clipx' ) (13 'clipy' ) (14 'clipwidth' ) (15 'clipheight' ) (16 'sourcefield' ) (17 'destfield' ) (18 'source' ) (19 'dest' ) (20 'sstrike' ) (21 'dstrike' ) (22 'printing' ) (23 'chari' ) (24 'stopx' ) (25 'xtable' ) (26 'exceptions' ) (27 'spacecount' ) (28 'spacei' ) (29 'spacex' ) (30 'charpad' ) (31 'text' ) (32 'spacesize' ) (33 'style' ) (34 'para' ) (35 'font' ) (36 'fontno' ) (37 'minascii' ) (38 'maxascii' ) (39 'glyphs' ) (40 'frame' ) (41 'looktype' ) (42 'kern' ) ) */
 
-	// CLBITBLT layout:
-	PI_BITBLT_FUNCTION: 0,
-	PI_BITBLT_GRAY: 1,
-	PI_BITBLT_DESTBITS: 2,
-	PI_BITBLT_DESTRASTER: 3,
-	PI_BITBLT_DESTX: 4,
-	PI_BITBLT_DESTY: 5,
-	PI_BITBLT_WIDTH: 6,
-	PI_BITBLT_HEIGHT: 7,
-	PI_BITBLT_SOURCEBITS: 8,
-	PI_BITBLT_SOURCERASTER: 9,
-	PI_BITBLT_SOURCEX: 10,
-	PI_BITBLT_SOURCEY: 11,
-	PI_BITBLT_CLIPX: 12,
-	PI_BITBLT_CLIPY: 13,
-	PI_BITBLT_CLIPWIDTH: 14,
-	PI_BITBLT_CLIPHEIGHT: 15,
-	PI_BITBLT_SOURCEFIELD: 16,
-	PI_BITBLT_DESTFIELD: 17,
-	PI_BITBLT_SOURCE: 18,
-	PI_BITBLT_DEST: 19,
-	PI_BITBLT_PRINTING: 22,
-	PI_BITBLT_CHARI: 23,
-	PI_BITBLT_STOPX: 24,
-	PI_BITBLT_XTABLE: 25,
-	PI_BITBLT_EXCEPTIONS: 26,
-	PI_BITBLT_CHARPAD: 30,
-	PI_BITBLT_TEXT: 31,
-	PI_BITBLT_MINASCII: 37,
-	PI_BITBLT_MAXASCII: 38,
-	PI_BITBLT_KERN: 42,
+    // CLBITBLT layout:
+    PI_BITBLT_FUNCTION: 0,
+    PI_BITBLT_GRAY: 1,
+    PI_BITBLT_DESTBITS: 2,
+    PI_BITBLT_DESTRASTER: 3,
+    PI_BITBLT_DESTX: 4,
+    PI_BITBLT_DESTY: 5,
+    PI_BITBLT_WIDTH: 6,
+    PI_BITBLT_HEIGHT: 7,
+    PI_BITBLT_SOURCEBITS: 8,
+    PI_BITBLT_SOURCERASTER: 9,
+    PI_BITBLT_SOURCEX: 10,
+    PI_BITBLT_SOURCEY: 11,
+    PI_BITBLT_CLIPX: 12,
+    PI_BITBLT_CLIPY: 13,
+    PI_BITBLT_CLIPWIDTH: 14,
+    PI_BITBLT_CLIPHEIGHT: 15,
+    PI_BITBLT_SOURCEFIELD: 16,
+    PI_BITBLT_DESTFIELD: 17,
+    PI_BITBLT_SOURCE: 18,
+    PI_BITBLT_DEST: 19,
+    PI_BITBLT_PRINTING: 22,
+    PI_BITBLT_CHARI: 23,
+    PI_BITBLT_STOPX: 24,
+    PI_BITBLT_XTABLE: 25,
+    PI_BITBLT_EXCEPTIONS: 26,
+    PI_BITBLT_CHARPAD: 30,
+    PI_BITBLT_TEXT: 31,
+    PI_BITBLT_MINASCII: 37,
+    PI_BITBLT_MAXASCII: 38,
+    PI_BITBLT_KERN: 42,
 
-	// CLFORM layout:
-	PI_FORM_EXTENT: 0,
-	PI_FORM_BITS: 1,
-	// also: offset figure ground
+    // CLFORM layout:
+    PI_FORM_EXTENT: 0,
+    PI_FORM_BITS: 1,
+    // also: offset figure ground
 
     // CLCURSOR layout:
     PI_CURSOR_BITSTR: 0,
     PI_CURSOR_OFFSET: 1,
 
-	// runtime indices and offsets:
+    // runtime indices and offsets:
 
-	// process frame layout (off BP):
-	FI_FIRST_TEMP: -1,
-	// nominal stack frame contains six items, as follow:
-	FI_SAVED_BP: 0,
-	FI_CALLER_PC: 1,
-	FI_NUMARGS: 2,
-	FI_METHOD: 3,
-	FI_MCLASS: 4,
-	FI_RECEIVER: 5,	// top stack item in previous frame
-	//
-	FI_LAST_ARG: 6,	// stack item in previous frame
-	//
-	F_FRAMESIZE: 5,	// don't count args nor receiver...
+    // process frame layout (off BP):
+    FI_FIRST_TEMP: -1,
+    // nominal stack frame contains six items, as follow:
+    FI_SAVED_BP: 0,
+    FI_CALLER_PC: 1,
+    FI_NUMARGS: 2,
+    FI_METHOD: 3,
+    FI_MCLASS: 4,
+    FI_RECEIVER: 5,	// top stack item in previous frame
+    //
+    FI_LAST_ARG: 6,	// stack item in previous frame
+    //
+    F_FRAMESIZE: 5,	// don't count args nor receiver...
 
-	// Class instSize format (assuming untagged integer!):
-	FMT_HASPOINTERS: 0x4000,
-	FMT_HASWORDS: 0x2000,
-	FMT_ISVARIABLE: 0x1000,
-	FMT_BYTELENGTH: 0x07ff,
+    // Class instSize format (assuming untagged integer!):
+    FMT_HASPOINTERS: 0x4000,
+    FMT_HASWORDS: 0x2000,
+    FMT_ISVARIABLE: 0x1000,
+    FMT_BYTELENGTH: 0x07ff,
 
     // Ints
     MAX_INT:  0x3FFF,
@@ -454,9 +457,9 @@ The instsize is an integer (ie low bit = 1) with the following interpretation:
     },
     fieldOfObject: function(i, oop) {
         // i = 1 for first field after class
-    	var addr = this.dataAddress(oop);
-    	var a = addr+(2*i);
-    	return this.data[a+1]*256 + this.data[a];
+        var addr = this.dataAddress(oop);
+        var a = addr+(2*i);
+        return this.data[a+1]*256 + this.data[a];
     },
     classOfOop: function(oop) {
         return (this.fieldOfObject(0, oop) & 0xFFC0) / 2; // our oops are half the original
@@ -468,9 +471,9 @@ The instsize is an integer (ie low bit = 1) with the following interpretation:
         return oop & 1;
     },
     lengthBitsAtAddr: function(addr) {
-    	var len = this.data[addr] & 0x3F;
-    	if (len > 0) return len;
-    	return this.data[addr-1] * 256 + this.data[addr-2];
+        var len = this.data[addr] & 0x3F;
+        if (len > 0) return len;
+        return this.data[addr-1] * 256 + this.data[addr-2];
     },
 });
 
@@ -1449,7 +1452,7 @@ Object.subclass('St78.vm.Object',
 },
 'accessing', {
     pointersSize: function() {
-    	return this.pointers ? this.pointers.length : 0;
+        return this.pointers ? this.pointers.length : 0;
     },
     bytesSize: function() {
         return this.bytes ? this.bytes.length : 0;
@@ -2003,7 +2006,7 @@ Object.subclass('St78.vm.Interpreter',
                 newbits.push(oldbits[(i+8)*2]);
             }
             cursor.pointers[NT.PI_CURSOR_BITSTR].bytes = newbits;
-	    });
+        });
     },
     initVMState: function() {
         this.byteCodeCount = 0;
@@ -2107,46 +2110,46 @@ Object.subclass('St78.vm.Interpreter',
                 this.push(this.specialObjects[b - 0x78 + 1]); break;
         } else switch (b) { // Chrome only optimized up to 128 cases
             // Sundry
-			case 0x80:
-				this.doStore(this.pop(), this.nextByte()); break;  // STOPOP
-			case 0x81:
-				this.doStore(this.top(), this.nextByte()); break;  // STONP
-			case 0x82:
-				this.pop(); break;	// POP
-			case 0x83:	// RETURN
-			    this.doReturn(); // method return
-				break;
-			case 0x84:	// REMLV
-				this.doRemoteReturn(); // block return
-				break;
-			case 0x85:	// PUSHCURRENT
-				this.push(this.activeProcess);
-				break;
-			case 0x86:	// SUPER
-				this.doSuper = true;
-				break;
-			case 0x87:	// LSELF (cf. 0x71 above)
-				this.push(this.receiver);
-				break;
-			case 0x88:	// X LDINST
-				this.push(this.receiver.pointers[this.nextByte()]);
-				break;
-			case 0x89:	// X LDTEMP
+            case 0x80:
+                this.doStore(this.pop(), this.nextByte()); break;  // STOPOP
+            case 0x81:
+                this.doStore(this.top(), this.nextByte()); break;  // STONP
+            case 0x82:
+                this.pop(); break;	// POP
+            case 0x83:	// RETURN
+                this.doReturn(); // method return
+                break;
+            case 0x84:	// REMLV
+                this.doRemoteReturn(); // block return
+                break;
+            case 0x85:	// PUSHCURRENT
+                this.push(this.activeProcess);
+                break;
+            case 0x86:	// SUPER
+                this.doSuper = true;
+                break;
+            case 0x87:	// LSELF (cf. 0x71 above)
+                this.push(this.receiver);
+                break;
+            case 0x88:	// X LDINST
+                this.push(this.receiver.pointers[this.nextByte()]);
+                break;
+            case 0x89:	// X LDTEMP
                 var addr = this.currentFrameTempOrArg(this.nextByte());
-				this.push(this.activeProcessPointers[addr]); break
-				break;
-			case 0x8A:	// X LDLIT
-				this.push(this.methodLiteral(this.nextByte()));
-				break;
-			case 0x8B:	// X LDLITI
-				this.push(this.methodLiteral(this.nextByte()).pointers[NT.PI_OBJECTREFERENCE_VALUE]);
-				break;
-			case 0x8C:	// X SEND
-				this.send(this.methodLiteral(this.nextByte()));
-				break;
-			case 0x8D:
-			case 0x8E: this.nono(); break; 			// illegal 0x87..0x8F
-			case 0x8F: this.breakNow("exit to debugger"); break;
+                this.push(this.activeProcessPointers[addr]); break
+                break;
+            case 0x8A:	// X LDLIT
+                this.push(this.methodLiteral(this.nextByte()));
+                break;
+            case 0x8B:	// X LDLITI
+                this.push(this.methodLiteral(this.nextByte()).pointers[NT.PI_OBJECTREFERENCE_VALUE]);
+                break;
+            case 0x8C:	// X SEND
+                this.send(this.methodLiteral(this.nextByte()));
+                break;
+            case 0x8D:
+            case 0x8E: this.nono(); break; 			// illegal 0x87..0x8F
+            case 0x8F: this.breakNow("exit to debugger"); break;
 
             // Short jumps
             case 0x90: case 0x91: case 0x92: case 0x93: case 0x94: case 0x95: case 0x96: case 0x97:
@@ -2213,39 +2216,39 @@ Object.subclass('St78.vm.Interpreter',
         }.bind(this);
     },
     doStore: function (value, addrByte) {
-		switch (addrByte >> 4) {
-			case 0x0:	// store inst
-				this.receiver.pointers[addrByte] = value; break;
-			case 0x1:	// store temp
-				var addr = this.currentFrameTempOrArg(addrByte-0x10);
-				this.activeProcessPointers[addr] = value; break;
-			case 0x2:	// store lit
-			case 0x3:
-				this.nono(); break;
-			case 0x4:	// store lit indirect
-			case 0x5:
-			case 0x6:
-		        this.methodLiteral(addrByte&0x3F).pointers[NT.PI_OBJECTREFERENCE_VALUE] = value; break;
+        switch (addrByte >> 4) {
+            case 0x0:	// store inst
+                this.receiver.pointers[addrByte] = value; break;
+            case 0x1:	// store temp
+                var addr = this.currentFrameTempOrArg(addrByte-0x10);
+                this.activeProcessPointers[addr] = value; break;
+            case 0x2:	// store lit
+            case 0x3:
+                this.nono(); break;
+            case 0x4:	// store lit indirect
+            case 0x5:
+            case 0x6:
+                this.methodLiteral(addrByte&0x3F).pointers[NT.PI_OBJECTREFERENCE_VALUE] = value; break;
             case 0x8:
-				// handle EXTENDED stores 0x88-0x8c
-				var extendedAddr = this.nextByte();
-				switch (addrByte) {
-					case 0x88:	// STO* X LDINST
-						this.receiver.pointers[extendedAddr] = value; break;
-					case 0x89:	// STO* X LDTEMP
-						var addr = this.currentFrameTempOrArg(extendedAddr);
-				        this.activeProcessPointers[addr] = value; break;
-					case 0x8b:	// STO* X LDLITI
+                // handle EXTENDED stores 0x88-0x8c
+                var extendedAddr = this.nextByte();
+                switch (addrByte) {
+                    case 0x88:	// STO* X LDINST
+                        this.receiver.pointers[extendedAddr] = value; break;
+                    case 0x89:	// STO* X LDTEMP
+                        var addr = this.currentFrameTempOrArg(extendedAddr);
+                        this.activeProcessPointers[addr] = value; break;
+                    case 0x8b:	// STO* X LDLITI
                         var oref = this.methodLiteral(extendedAddr);
                         oref.pointers[NT.PI_OBJECTREFERENCE_VALUE] = value; break
-					default:		// 0x8a (X LDLIT) and 0x8c (X SEND)
-						this.nono();
-				};
-				break;
+                    default:		// 0x8a (X LDLIT) and 0x8c (X SEND)
+                        this.nono();
+                };
+                break;
             default:
-				this.nono();
-		}
-	},
+                this.nono();
+        }
+    },
     interpret: function(forMilliseconds, thenDo) {
         // run until idle, but at most for a couple milliseconds
         // answer milliseconds to sleep or 'break' if reached breakpoint
@@ -2314,8 +2317,8 @@ Object.subclass('St78.vm.Interpreter',
                 this.interruptCheckCounterFeedBackReset -= 12;
             }
         }
-    	this.interruptCheckCounter = this.interruptCheckCounterFeedBackReset; //reset the interrupt check counter
-    	this.lastTick = now; //used to detect wraparound of millisecond clock
+        this.interruptCheckCounter = this.interruptCheckCounterFeedBackReset; //reset the interrupt check counter
+        this.lastTick = now; //used to detect wraparound of millisecond clock
         if (now >= this.breakOutTick) // have to return to web browser once in a while
             this.breakOutOfInterpreter = this.breakOutOfInterpreter || true; // do not overwrite break string
     },
@@ -2353,7 +2356,7 @@ Object.subclass('St78.vm.Interpreter',
             if (mDict.isNil) throw "cannotInterpret";
             var newMethod = this.lookupSelectorInDict(mDict, selector);
             if (!newMethod.isNil) {
-                //load cache entry here and return
+                // cache the method and return
                 cacheEntry.method = newMethod;
                 cacheEntry.methodClass = currentClass;
                 cacheEntry.primIndex = newMethod.methodPrimitiveIndex();
@@ -2366,11 +2369,14 @@ Object.subclass('St78.vm.Interpreter',
         if (this.breakOnMNU)
             this.breakNow('MNU: ' + startingClass.className() + '>>' + selector.bytesAsUnicode());
         if (this.specialObjects[0].isCompiledMethod()) {
-            cacheEntry.method = this.specialObjects[0];      // Object>>error
-            cacheEntry.methodClass = this.nilObj.stClass;
-            cacheEntry.primIndex = 0;
-            cacheEntry.argCount = 0;
-            return cacheEntry;
+            // run in-image MNU handler
+            var uncachable = {
+                method: this.specialObjects[0],      // Object>>error
+                methodClass: this.nilObj.stClass,    // Object
+                primIndex: 0,
+                argCount: 0,
+            };
+            return uncachable;
         }
         // regular error handling not possible, lookup #error: instead
         var rcvr = this.pop(),
@@ -2530,11 +2536,17 @@ Object.subclass('St78.vm.Interpreter',
         this.push(argCount);
         this.pushPCBP();
         if (this.sp !== newFrame) throw "bad frame size";
+        // we only externalize this here once, not on every push/pop
+        // temps and the current stack will extend below BP, but
+        // it's used only for ProcessFrame>>successor which looks no further than BP
+        // we could subtract an arbitrary number to account for temps+stack, but it's not needed
+        this.activeProcessPointers[NT.PI_PROCESS_TOP] = (this.activeProcessPointers.length - this.sp) - 1;
     },
     popFrame: function() {
         this.popN(this.bp - this.sp); // drop temps
         this.popPCBP();                         // restore previous frame and pc
         this.popN(4 + this.methodNumArgs);      // drop old frame + args
+        this.activeProcessPointers[NT.PI_PROCESS_TOP] = (this.activeProcessPointers.length - this.sp) - 1;
     },
     loadFromFrame: function(aFrame) {
         // cache values from current frame in slots
@@ -2810,19 +2822,24 @@ Object.subclass('St78.vm.Interpreter',
             if (!debugFrame && bp + NT.FI_SAVED_BP <= i && bp + NT.FI_RECEIVER > i) continue;
             var obj = ctx[i];
             var value = obj && obj.stInstName ? obj.stInstName(32) : obj;
-            stack += Strings.format('\n[%s] %s%s', i,
+            stack += Strings.format('\n%s %s%s',
+                printAll
+                    ? i + '(' + (bp + NT.FI_SAVED_BP === i ? '●':'◦') + (i - NT.PI_PROCESS_STACK) + ')'
+                    : '[' + i + ']',
                 bp + NT.FI_FIRST_TEMP - numTemps < i && i <= bp + NT.FI_FIRST_TEMP
-                    ? ('temp' + (bp-1+numArgs-i) + '/t' + (bp+numArgs-i) + ': ') :
-                bp + NT.FI_SAVED_BP === i ? ' savedBP: ' :
-                bp + NT.FI_CALLER_PC === i ? 'callerPC: ' :
-                bp + NT.FI_NUMARGS === i ? ' numArgs: ' :
-                bp + NT.FI_METHOD === i ? '  method: ' :
-                bp + NT.FI_MCLASS === i ? '  mclass: ' :
-                bp + NT.FI_RECEIVER === i ? 'receiver: ' :
-                bp + NT.FI_RECEIVER < i && i <= bp + NT.FI_RECEIVER + numArgs
-                    ? (' arg' + (bp+5+numArgs-i) + '/t' + (bp+6+numArgs-i) + ': ') :
-                sp === i ? '   sp ==> ' :
-                '          ', value);
+                    ? ('temp' + (bp-1+numArgs-i) + '/t' + (bp+numArgs-i) + ': ')
+                    : bp + NT.FI_SAVED_BP === i ? ' savedBP: '
+                    : bp + NT.FI_CALLER_PC === i ? 'callerPC: '
+                    : bp + NT.FI_NUMARGS === i ? ' numArgs: '
+                    : bp + NT.FI_METHOD === i ? '  method: '
+                    : bp + NT.FI_MCLASS === i ? '  mclass: '
+                    : bp + NT.FI_RECEIVER === i ? 'receiver: '
+                    : bp + NT.FI_RECEIVER < i && i <= bp + NT.FI_RECEIVER + numArgs
+                        ? (' arg' + (bp+5+numArgs-i) + '/t' + (bp+6+numArgs-i) + ': ')
+                    : sp === i
+                        ? '   sp ==> '
+                    : '          ',
+                value);
             if (i >= bp + NT.FI_RECEIVER + numArgs && i+1 < ctx.length) {
                 if (!printAll) return stack;
                 sp = bp + NT.FI_LAST_ARG + numArgs;
@@ -3149,7 +3166,7 @@ Object.subclass('St78.vm.Primitives',
         newFloat.isFloat = true;
         newFloat.float = value;
         return newFloat;
-	},
+    },
     makePointWithXandY: function(x, y) {
         var newPoint = this.vm.instantiateClass(this.pointClass, 0);
         newPoint.pointers[NT.PI_POINT_X] = x;
@@ -3477,21 +3494,21 @@ Object.subclass('St78.vm.Primitives',
         // Make a block-like outrigger to rcvr, a process
         this.vm.remoteCopyCount++;
         var rcvr = this.vm.stackValue(0);
-	    if (rcvr !== this.vm.activeProcess) return false;
-		var pc = this.vm.pc,
-    		bp = this.vm.bp,
-		    sp = this.vm.sp,
-		    relBP = rcvr.pointers.length - bp,
-    		relSP = rcvr.pointers.length - sp,
-		    jumpInstr = this.vm.method.bytes[pc],
-    		rCode = this.vm.instantiateClass(this.remoteCodeClass, 0);
-		pc += jumpInstr < 0xA0 ? 1 : 2;
-		// these are used in primitiveValue
-		rCode.pointers[NT.PI_RCODE_FRAMEOFFSET] = relBP; // offset from end, used in ProcessFrame>>from:
-		rCode.pointers[NT.PI_RCODE_STARTINGPC] = pc + NT.PC_BIAS;
-		rCode.pointers[NT.PI_RCODE_PROCESS] = rcvr;
-		this.vm.popNandPush(1, rCode);
-		return true;
+        if (rcvr !== this.vm.activeProcess) return false;
+        var pc = this.vm.pc,
+            bp = this.vm.bp,
+            sp = this.vm.sp,
+            relBP = rcvr.pointers.length - bp,
+            relSP = rcvr.pointers.length - sp,
+            jumpInstr = this.vm.method.bytes[pc],
+            rCode = this.vm.instantiateClass(this.remoteCodeClass, 0);
+        pc += jumpInstr < 0xA0 ? 1 : 2;
+        // these are used in primitiveValue
+        rCode.pointers[NT.PI_RCODE_FRAMEOFFSET] = relBP; // offset from end, used in ProcessFrame>>from:
+        rCode.pointers[NT.PI_RCODE_STARTINGPC] = pc + NT.PC_BIAS;
+        rCode.pointers[NT.PI_RCODE_PROCESS] = rcvr;
+        this.vm.popNandPush(1, rCode);
+        return true;
     },
     primitiveValue: function(argCount) {
         // One entry for RemoteCode eval, value, and for Process eval which does a full process switch
@@ -3503,7 +3520,7 @@ Object.subclass('St78.vm.Primitives',
         var contextLength = this.vm.activeProcessPointers.length;
 
         // store the current sp here to mark the rCode as activated
-		rCode.pointers[NT.PI_RCODE_STACKOFFSET] = contextLength - this.vm.sp;
+        rCode.pointers[NT.PI_RCODE_STACKOFFSET] = contextLength - this.vm.sp;
 
         // Common code to sleep this frame
         this.vm.push(this.vm.pc + NT.PC_BIAS);           // save PC and absBP for remoteReturn
@@ -3511,17 +3528,17 @@ Object.subclass('St78.vm.Primitives',
 
         // Wake the remote context frame
         var frame = contextLength - rCode.pointers[NT.PI_RCODE_FRAMEOFFSET];
-		this.vm.bp = this.vm.loadFromFrame(frame);
-		this.vm.pc = rCode.pointers[NT.PI_RCODE_STARTINGPC] - NT.PC_BIAS;
+        this.vm.bp = this.vm.loadFromFrame(frame);
+        this.vm.pc = rCode.pointers[NT.PI_RCODE_STARTINGPC] - NT.PC_BIAS;
         return true;
     },
     primitiveValueGets: function(argCount) {
-		var value = this.vm.stackValue(1);
+        var value = this.vm.stackValue(1);
         if (!this.primitiveValue(0))
             return false;
-		this.vm.push(value);		// for remote return (if there is only a ld/store opcode)
-		this.vm.doStore(value, this.vm.nextByte());		// TODO emulate STOREMODE
-		return true;
+        this.vm.push(value);		// for remote return (if there is only a ld/store opcode)
+        this.vm.doStore(value, this.vm.nextByte());		// TODO emulate STOREMODE
+        return true;
     },
     resume: function(processToRun) {
         // Called by <Process> eval - sleep the current process and wake processToRun
@@ -3604,7 +3621,7 @@ Object.subclass('St78.vm.Primitives',
         this.vm.breakOutOfInterpreter = this.vm.breakOutOfInterpreter || true;   // show on screen
         this.vm.popN(argCount); // return self
         return true;
-  	},
+      },
 
     primitiveWait: function(argCount) {
         if (argCount !== 1) return false;
@@ -3615,8 +3632,8 @@ Object.subclass('St78.vm.Primitives',
         this.vm.breakOutOfInterpreter = this.vm.breakOutOfInterpreter || true;
         this.vm.pop(1);
         return true;
-	},
-	primitiveClipboardText: function(argCount) {
+    },
+    primitiveClipboardText: function(argCount) {
         if (argCount === 0) { // read from clipboard
             if (typeof(this.display.clipboardString) !== 'string') return false;
             this.vm.popNandPush(1, this.makeStString(this.fromUnicode(this.display.clipboardString)));
@@ -3630,8 +3647,8 @@ Object.subclass('St78.vm.Primitives',
             this.vm.breakOutOfInterpreter = this.vm.breakOutOfInterpreter || true;       // so the system can get the string
         }
         return true;
-	},
-	primitiveCopyBits: function(argCount) { // no rcvr class check, to allow unknown subclasses (e.g. under Turtle)
+    },
+    primitiveCopyBits: function(argCount) { // no rcvr class check, to allow unknown subclasses (e.g. under Turtle)
         var bitbltObj = this.vm.stackValue(argCount);
         if (bitbltObj.pointers[NT.PI_BITBLT_SOURCEBITS].pointers || bitbltObj.pointers[NT.PI_BITBLT_DESTBITS].pointers)
             return this.bitBltCopyPointers(bitbltObj);
@@ -3641,8 +3658,8 @@ Object.subclass('St78.vm.Primitives',
         if (bitblt.destForm === this.displayBlt.pointers[NT.PI_BITBLT_DEST])
             this.displayDirty(bitblt.affectedRect());
         return true;
-	},
-	primitiveScanWord: function(argCount) { // no rcvr class check as yet
+    },
+    primitiveScanWord: function(argCount) { // no rcvr class check as yet
         var lasti = this.stackLargeInt(1),
             bb = this.stackNonInteger(0);
         if (!this.success) return false;
@@ -3688,7 +3705,7 @@ Object.subclass('St78.vm.Primitives',
         chari--;
         bbPtrs[NT.PI_BITBLT_CHARI] = this.makeLargeIfNeeded(chari);
         return this.vm.popNandPush(argCount+1, 10);
-	},
+    },
 
     primitiveKeyboardNext: function(argCount) {
         this.idleCounter = 0; // reset idle if there is input
@@ -3826,16 +3843,16 @@ Object.subclass('St78.vm.Primitives',
         this.display.ctx.putImageData(this.displayPixels, 0, 0, this.cursorX, this.cursorY, 16, 16);
         this.display.lastDraw = Date.now();
     },
-	primitiveTicks: function(argCount) {
+    primitiveTicks: function(argCount) {
         //Return the value of the millisecond clock as a large integer.
         //Note that the millisecond clock wraps around periodically.
         return this.popNandPushIfOK(argCount + 1, this.makeLargeIfNeeded(this.millisecondClockValue()));
-	},
-	millisecondClockValue: function() {
+    },
+    millisecondClockValue: function() {
         //Return the value of the millisecond clock as a large integer.
         //Note that the millisecond clock wraps around periodically.
         return (Date.now() - this.vm.startupTime) & this.vm.millisecondClockMask;
-	},
+    },
     bitBltCopyPointers: function(bitbltObj) {
         // BitBlt is used by the image to copy literals into and out of
         // CompiledMethods' bytes. In our implementation, the literals are
@@ -3928,6 +3945,10 @@ Object.subclass('St78.vm.Primitives',
             if (!/http(s)?:\/\//.test(fileName)) fileName = fileName.replace(/http(s)?:/, '');
             // HACK: we switched to https but the image may still use http
             fileName = fileName.replace(/^http:(\/\/lively-web.org\/)/, 'https:$1');
+            if (window.location.hostname.startsWith('smalltalkzoo')) {
+                fileName = fileName.replace('lively-web.org', window.location.hostname);
+                fileName = fileName.replace('/users/bert/', '/users/codefrau/');
+            }
             alertOK("fetching " + fileName);
             var isDir = /\/$/.test(fileName),  // ends in slash
                 unfreeze = this.vm.freeze(),   // freeze VM until we get result
@@ -4206,7 +4227,7 @@ Object.subclass('St78.vm.BitBlt',
         // init halftones
         var halftoneWord;
         var halftoneHeight;
-       	if (this.halftone) {
+           if (this.halftone) {
             halftoneWord = this.halftone[0];
             halftoneHeight = this.halftone.length;
         } else {
@@ -4380,33 +4401,33 @@ Object.subclass('St78.vm.BitBlt',
         this.dx = this.destX + leftOffset;
         this.bbW = this.width - leftOffset;
         var rightOffset = (this.dx + this.bbW) - (this.clipX + this.clipW);
-    	if (rightOffset > 0)
-    		this.bbW -= rightOffset;
+        if (rightOffset > 0)
+            this.bbW -= rightOffset;
         var topOffset = Math.max(this.clipY - this.destY, 0);
         this.dy = this.destY + topOffset;
         this.bbH = this.height - topOffset;
         var bottomOffset = (this.dy + this.bbH) - (this.clipY + this.clipH);
-    	if (bottomOffset > 0)
-    		this.bbH -= bottomOffset;
+        if (bottomOffset > 0)
+            this.bbH -= bottomOffset;
         // intersect with sourceForm bounds
-    	if (this.noSource) return;
+        if (this.noSource) return;
         this.sx = this.sourceX + leftOffset;
         this.sy = this.sourceY + topOffset;
-    	if (this.sx < 0) {
-    		this.dx -= this.sx;
-    		this.bbW += this.sx;
-    		this.sx = 0;
-    	}
-    	if ((this.sx + this.bbW) > this.sourceWidth)
-    		this.bbW -= (this.sx + this.bbW) - this.sourceWidth;
-    	if (this.sy < 0) {
-    		this.dy -= this.sy;
-    		this.bbH += this.sy;
-    		this.sy = 0;
-    	}
-    	if ((this.sy + this.bbH) > this.sourceHeight)
-    		this.bbH -= (this.sy + this.bbH) - this.sourceHeight;
-	},
+        if (this.sx < 0) {
+            this.dx -= this.sx;
+            this.bbW += this.sx;
+            this.sx = 0;
+        }
+        if ((this.sx + this.bbW) > this.sourceWidth)
+            this.bbW -= (this.sx + this.bbW) - this.sourceWidth;
+        if (this.sy < 0) {
+            this.dy -= this.sy;
+            this.bbH += this.sy;
+            this.sy = 0;
+        }
+        if ((this.sy + this.bbH) > this.sourceHeight)
+            this.bbH -= (this.sy + this.bbH) - this.sourceHeight;
+    },
     checkSourceOverlap: function() {
         if (this.sourceForm === this.destForm && this.dy >= this.sy) {
             if (this.dy > this.sy) {
@@ -4427,7 +4448,7 @@ Object.subclass('St78.vm.BitBlt',
             }
             this.destIndex = (this.dy * this.destPitch) + (this.dx / 16 | 0); //recompute since dx, dy change
             this.destDelta = (this.destPitch * this.vDir) - (this.nWords * this.hDir);
-		}
+        }
     },
 },
 'accessing', {
@@ -4469,8 +4490,8 @@ Object.subclass('St78.vm.InstructionPrinter',
         this.scanner = new St78.vm.InstructionStream(this.method, this.vm);
         this.oldPC = this.scanner.pc;
         var end = this.method.methodEndPC();
-    	while (this.scanner.pc < end)
-        	this.scanner.interpretNextInstructionFor(this);
+        while (this.scanner.pc < end)
+            this.scanner.interpretNextInstructionFor(this);
         return this.result;
     },
     print: function(instruction) {
@@ -4518,48 +4539,48 @@ Object.subclass('St78.vm.InstructionPrinter',
 'decoding', {
 
     doDup: function() {
-    	this.print('dup');
+        this.print('dup');
     },
     doPop: function() {
-    	this.print('pop');
+        this.print('pop');
     },
     doSuper: function() {
-    	this.print('do super send');
+        this.print('do super send');
     },
-	jump: function(delta, conditional) {
+    jump: function(delta, conditional) {
         this.print((conditional ? 'jumpIfFalse: ' : 'jumpTo: ') + (this.scanner.pc + delta));
     },
 
 
     doReturn: function() {
-	    this.print('return');
+        this.print('return');
     },
 
 
 
 
-	pushActiveContext: function() {
-	    this.print('push: thisContext');
+    pushActiveContext: function() {
+        this.print('push: thisContext');
     },
     pushConstant: function(obj) {
-    	this.print('pushConst: ' + (obj.stInstName ? obj.stInstName() : obj));
+        this.print('pushConst: ' + (obj.stInstName ? obj.stInstName() : obj));
     },
     pushLiteralVariable: function(index) {
         var lit = this.printLiteral(index);
         this.print('pushLitRef: ' + index + ' (' + lit + ')');
     },
-	pushReceiver: function() {
+    pushReceiver: function() {
         this.print('push: self');
     },
     pushReceiverVariable: function(offset) {
         var inst = this.printInstVar(offset);
         this.print('pushInstVar: ' + inst);
     },
-	pushTemporaryVariable: function(offset) {
-	    this.print('pushArgOrTemp: ' + offset);
+    pushTemporaryVariable: function(offset) {
+        this.print('pushArgOrTemp: ' + offset);
     },
     send: function(selector) {
-    	this.print( 'send: #' + (selector.bytesAsUnicode ? selector.bytesAsUnicode() : selector));
+        this.print( 'send: #' + (selector.bytesAsUnicode ? selector.bytesAsUnicode() : selector));
     },
     storeIntoLiteralVariable: function(index, doPop) {
         var lit = this.printLiteral(index);
@@ -4569,8 +4590,8 @@ Object.subclass('St78.vm.InstructionPrinter',
         var inst = this.printInstVar(offset);
         this.print((doPop ? 'pop' : 'store') + 'IntoInstVar: ' + inst);
     },
-	storeIntoTemporaryVariable: function(offset, doPop) {
-	    this.print((doPop ? 'pop' : 'store') + 'IntoArgOrTemp: ' + offset);
+    storeIntoTemporaryVariable: function(offset, doPop) {
+        this.print((doPop ? 'pop' : 'store') + 'IntoArgOrTemp: ' + offset);
     },
     doRemoteReturn: function() {
         this.print('remote return');
@@ -4593,67 +4614,67 @@ Object.subclass('St78.vm.InstructionStream',
 'decoding',
 {
     interpretNextInstructionFor: function(client) {
-    	// Send to the argument, client, a message that specifies the type of the next instruction.
-    	var method = this.method;
-    	var byte = method.bytes[this.pc++];
-    	var offset = byte & 0xF;
-    	switch (byte >> 4) {
-    	case 0: return client.pushReceiverVariable(offset);
-    	case 1: return client.pushTemporaryVariable(offset);
-    	case 2: return client.pushConstant(method.methodGetLiteral(offset));
-    	case 3: return client.pushConstant(method.methodGetLiteral(offset + 16));
-    	case 4: return client.pushLiteralVariable(offset);
-    	case 5: return client.pushLiteralVariable(offset + 16);
-    	case 6: return client.pushLiteralVariable(offset + 32);
-    	case 7:
+        // Send to the argument, client, a message that specifies the type of the next instruction.
+        var method = this.method;
+        var byte = method.bytes[this.pc++];
+        var offset = byte & 0xF;
+        switch (byte >> 4) {
+        case 0: return client.pushReceiverVariable(offset);
+        case 1: return client.pushTemporaryVariable(offset);
+        case 2: return client.pushConstant(method.methodGetLiteral(offset));
+        case 3: return client.pushConstant(method.methodGetLiteral(offset + 16));
+        case 4: return client.pushLiteralVariable(offset);
+        case 5: return client.pushLiteralVariable(offset + 16);
+        case 6: return client.pushLiteralVariable(offset + 32);
+        case 7:
             if (offset===1) return client.pushReceiver()
-			if (offset < 8) throw "unusedBytecode";
-			return client.pushConstant(this.specialConstants[offset - 8]);
-    	case 8: // sundry
-    	    var doPop = false;
-    	    switch (offset) {
-    	        case 0: // ext pop
-    	            doPop = true;
-    	        case 1: // ext store
-    	            var byte2 = this.method.bytes[this.pc++];
-    	            var offset2 = byte2 & 0xF;
+            if (offset < 8) throw "unusedBytecode";
+            return client.pushConstant(this.specialConstants[offset - 8]);
+        case 8: // sundry
+            var doPop = false;
+            switch (offset) {
+                case 0: // ext pop
+                    doPop = true;
+                case 1: // ext store
+                    var byte2 = this.method.bytes[this.pc++];
+                    var offset2 = byte2 & 0xF;
                     switch (byte2 >> 4) {
                         case 0: return client.storeIntoReceiverVariable(offset2, doPop);
                         case 1: return client.storeIntoTemporaryVariable(offset2, doPop);
-                    	case 4: return client.storeIntoLiteralVariable(offset2, doPop);
-                    	case 5: return client.storeIntoLiteralVariable(offset2 + 16, doPop);
-                    	case 6: return client.storeIntoLiteralVariable(offset2 + 32, doPop);
-                    	case 8: // double-extended
-            	            var byte3 = this.method.bytes[this.pc++];
-                    	    switch (offset2) {
-                    	        case 8: return client.storeIntoReceiverVariable(byte3, doPop);
-                    	        case 9: return client.storeIntoTemporaryVariable(byte3, doPop);
-                    	        case 11: return client.storeIntoLiteralVariable(byte3, doPop);
-                    	    }
+                        case 4: return client.storeIntoLiteralVariable(offset2, doPop);
+                        case 5: return client.storeIntoLiteralVariable(offset2 + 16, doPop);
+                        case 6: return client.storeIntoLiteralVariable(offset2 + 32, doPop);
+                        case 8: // double-extended
+                            var byte3 = this.method.bytes[this.pc++];
+                            switch (offset2) {
+                                case 8: return client.storeIntoReceiverVariable(byte3, doPop);
+                                case 9: return client.storeIntoTemporaryVariable(byte3, doPop);
+                                case 11: return client.storeIntoLiteralVariable(byte3, doPop);
+                            }
                     }
                     throw "unusedBytecode";
-    	        case 2: return client.doPop();
-    	        case 3: return client.doReturn();
-    	        case 4: return client.doRemoteReturn();
-    	        case 5: return client.pushActiveContext();
-    	        case 6: return client.doSuper();
-    	        case 7: return client.pushReceiver();
-    	        case 8: return client.pushReceiverVariable(this.method.bytes[this.pc++]);
-    	        case 9: return client.pushTemporaryVariable(this.method.bytes[this.pc++]);
-    	        case 0xA: return client.pushConstant(method.methodGetLiteral(this.method.bytes[this.pc++]));
-        	    case 0xB: return client.pushLiteralVariable(this.method.bytes[this.pc++]);
-            	case 0xC: return client.send(method.methodGetLiteral(this.method.bytes[this.pc++]));
-            	case 0xF: return client.doBreakpoint();
-    	    }
-    	    throw "unusedBytecode";
-    	case 9: return client.jump((offset&7)+1, offset&8);
-    	case 0xA: return client.jump((((offset&7) - 4) * 256) + this.method.bytes[this.pc++], offset&8);
-    	case 0xB: return client.send(this.specialSelectors[offset]);
-    	case 0xC: return client.send(this.specialSelectors[offset+16]);
-    	case 0xD: return client.send(method.methodGetLiteral(offset));
-    	case 0xE: return client.send(method.methodGetLiteral(offset + 16));
-    	case 0xF: return client.send(method.methodGetLiteral(offset + 32));
-    	}
+                case 2: return client.doPop();
+                case 3: return client.doReturn();
+                case 4: return client.doRemoteReturn();
+                case 5: return client.pushActiveContext();
+                case 6: return client.doSuper();
+                case 7: return client.pushReceiver();
+                case 8: return client.pushReceiverVariable(this.method.bytes[this.pc++]);
+                case 9: return client.pushTemporaryVariable(this.method.bytes[this.pc++]);
+                case 0xA: return client.pushConstant(method.methodGetLiteral(this.method.bytes[this.pc++]));
+                case 0xB: return client.pushLiteralVariable(this.method.bytes[this.pc++]);
+                case 0xC: return client.send(method.methodGetLiteral(this.method.bytes[this.pc++]));
+                case 0xF: return client.doBreakpoint();
+            }
+            throw "unusedBytecode";
+        case 9: return client.jump((offset&7)+1, offset&8);
+        case 0xA: return client.jump((((offset&7) - 4) * 256) + this.method.bytes[this.pc++], offset&8);
+        case 0xB: return client.send(this.specialSelectors[offset]);
+        case 0xC: return client.send(this.specialSelectors[offset+16]);
+        case 0xD: return client.send(method.methodGetLiteral(offset));
+        case 0xE: return client.send(method.methodGetLiteral(offset + 16));
+        case 0xF: return client.send(method.methodGetLiteral(offset + 32));
+        }
     },
 
 });

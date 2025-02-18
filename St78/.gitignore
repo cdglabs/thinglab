@@ -1,3 +1,5 @@
 decompiled
 assets
 node_modules
+*.st78
+*.code-workspace
