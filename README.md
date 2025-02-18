@@ -17,10 +17,14 @@ A few fixes to click delays and event timestamps have been made since the previo
 #### December 2024
 No changes to ThingLab itself, but updates to the Smalltalk-78 VM code and the web UI.
 
+#### February 2025
+
+Update image and VM with upstream improvements.
+
 ## Links
 * https://cdglabs.github.io/thinglab/ (standalone version of ThingLab)
 * https://github.com/codefrau/Smalltalk78 (the Smalltalk-78 interpreter)
-* https://smalltalkzoo.thechm.org/HOPL-St78.html (a graphical debugger for the Smalltalk-78 interpreter; click the "load image" button at the bottom and select "ThingLab" if you want ThingLab rather than ST78 alone)
+* https://smalltalkzoo.thechm.org/HOPL-St78.html?thinglab (a graphical debugger for the Smalltalk-78 interpreter; click the "load image" button at the bottom and select "ThingLab" if you want ThingLab rather than ST78 alone)
 * http://constraints.cs.washington.edu/ui/thinglab-tr.pdf (the original Xerox PARC tech report on ThingLab)
 * http://videosrv14.cs.washington.edu/info/videos/mp4/general/ThingLab_Alan_Borning.mp4 (video of a 1978 Xerox PARC presentation)
 * http://vpri.org/writings.php (for documents on Smalltalk-78 itself—set the search criterion to "papers for Historical Context")
