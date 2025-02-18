@@ -17,10 +17,10 @@
         cursor: none;
     }
     pre {
+        background: #EEE;
         color: #000;
         line-height: 1.5;
         display: none;
-        background: #EEE;
         padding: 10px;
         border-radius: 10px;
         width: fit-content;
@@ -28,7 +28,7 @@
     body.fullscreen {
         background: #000;
     }
-    body.fullscreen #ui {
+    body.fullscreen > *:not(canvas) {
         display: none;
     }
     body.fullscreen #canvas {
@@ -47,15 +47,12 @@
 
 <canvas id="canvas" width="1024" height="768"></canvas>
 
-<p id="ui">
-
-This is a test page for the <a href="https://github.com/codefrau/Smalltalk78">Smalltalk-78</a> VM
-by Vanessa Freudenberg and Dan Ingalls. Not all functions of the
-<a href="https://smalltalkzoo.thechm.org/HOPL-St78.html">full environment</a> are supported.
-
-<br>
+<p>This is the <a href="https://github.com/codefrau/Smalltalk78">Smalltalk-78</a> VM
+by Vanessa Freudenberg and Dan Ingalls. Also check out the
+<a href="https://smalltalkzoo.thechm.org/HOPL-St78.html">Lively VM Debugger</a>.</p>
 
 <button id="helpbutton">Mouse and Keyboard Help</button>
+<button id="fullscreenbutton">Fullscreen</button>
 
 <pre id="help">
 <b>Mouse</b>
@@ -138,14 +135,25 @@ Ctrl-d  done with eval
         Smalltalk78.run("https://smalltalkzoo.thechm.org/images/updated.st78", canvas);
     });
 
-    helpbutton.onclick = function() {
+    let timeout;
+    helpbutton.onclick = () => {
+        clearTimeout(timeout);
         if (help.style.display) {
-            help.style.display = '';
             canvas.scrollIntoView({ behavior: 'smooth' });
+            timeout = setTimeout(() => help.style.display = '', 1000);
         } else {
             help.style.display = 'block';
             helpbutton.scrollIntoView({ behavior: 'smooth' });
         }
+    }
+
+    fullscreenbutton.onclick = () => {
+        canvas.requestFullscreen();
+    }
+
+    document.onfullscreenchange = () => {
+        const isFullscreen = document.fullscreenElement === canvas;
+        body.classList.toggle("fullscreen", isFullscreen);
     }
 </script>
 
